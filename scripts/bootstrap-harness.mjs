@@ -13,6 +13,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { detectBoundDs } from './detect-bound-ds.mjs';
+import { extractDsVoice } from './extract-ds-voice.mjs';
+import { personalizeDcFiles } from './personalize-dc.mjs';
 
 const root = process.cwd();
 const args = process.argv.slice(2);
@@ -137,26 +139,31 @@ function main() {
   }
 
   const { binding } = result;
-  const helmetBlock = buildHelmetBlock(binding);
+  const voice = extractDsVoice(binding, root);
+  const bound = { ...binding, voice, configured: true, configuredAt: new Date().toISOString() };
+  const helmetBlock = buildHelmetBlock(bound);
 
   if (checkOnly) {
-    process.stdout.write(`OK: bound to ${binding.name} (${binding.namespace})\n`);
+    process.stdout.write(`OK: bound to ${bound.name} (${bound.namespace})\n`);
     process.exit(0);
   }
 
-  writeBoundJson(binding);
-  writeGeneratedStyles(binding);
-  writeHelmetSnippet(binding, helmetBlock);
-  const patched = patchFiles(binding, helmetBlock);
+  writeBoundJson(bound);
+  writeGeneratedStyles(bound);
+  writeHelmetSnippet(bound, helmetBlock);
+  const patched = patchFiles(bound, helmetBlock);
+  const { personalized, targets } = personalizeDcFiles(bound, voice, root);
 
   process.stdout.write(
     [
-      `Bound harness to: ${binding.name}`,
-      `  root: ${binding.root}`,
-      `  namespace: ${binding.namespace}`,
-      `  components: ${binding.componentCount}`,
+      `Bound harness to: ${bound.name}`,
+      `  root: ${bound.root}`,
+      `  namespace: ${bound.namespace}`,
+      `  components: ${bound.componentCount}`,
+      `  voice: ${voice.tagline.slice(0, 60)}${voice.tagline.length > 60 ? '…' : ''}`,
       `  wrote: BOUND_DS.json, styles.css, ds-helmet.snippet.html`,
-      `  patched: ${patched} file(s)`,
+      `  patched: ${patched} technical placeholder(s)`,
+      `  personalized: ${personalized}/${targets} *.dc.html (voice + component pruning)`,
       '  reset: node scripts/unbind-harness.mjs',
     ].join('\n') + '\n',
   );

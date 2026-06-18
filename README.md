@@ -36,7 +36,7 @@ Open a **new tab** in the same project and send:
 GO
 ```
 
-Done. The harness reads `_ds/`, generates `DESIGN.md`, configures templates, and asks what surface to design first.
+Done. The harness reads `_ds/`, generates `DESIGN.md`, personalizes `*.dc.html` (voice + DS components), and asks what surface to design first.
 
 **No** npm, git, terminal, or scripts required inside the canvas.
 

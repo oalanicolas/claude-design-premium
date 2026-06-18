@@ -79,9 +79,15 @@ function main() {
 
   fs.writeFileSync(path.join(root, 'styles.css'), UNBOUND_STYLES);
 
-  const dcFiles = walk('.').filter((f) => f.endsWith('.dc.html'));
+  const templateDir = path.join(root, 'scripts/templates/dc');
+  const dcFiles = walk('.').filter((f) => f.endsWith('.dc.html') && !f.startsWith('scripts/'));
   for (const rel of dcFiles) {
     const abs = path.join(root, rel);
+    const templatePath = path.join(templateDir, path.basename(rel));
+    if (fs.existsSync(templatePath)) {
+      fs.copyFileSync(templatePath, abs);
+      continue;
+    }
     let content = fs.readFileSync(abs, 'utf8');
     content = resetHelmet(content);
     content = applyUnbindPatterns(content);

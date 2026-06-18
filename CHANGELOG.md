@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.1.0 — 2026-06-18
+
+### Added
+
+- `scripts/extract-ds-voice.mjs` — extrai tagline, superfícies, CTAs e tema do readme do DS
+- `scripts/personalize-dc.mjs` — personaliza `*.dc.html` com voz + poda por componente
+- `scripts/templates/dc/` — snapshots agnósticos para `unbind-harness.mjs`
+
+### Changed
+
+- Bootstrap e `harness-auto-setup` agora personalizam comunicação e estrutura dos DCs
+- Placeholders de voz em Landing, AppShell, Deck, Doc, Starter
+- Blocos `CDP:REQUIRES`, `CDP:SURFACES`, `CDP:NAV-LINKS`, `CDP:APP-NAV` para poda/regeneração
+
 ## 2.0.1 — 2026-06-18
 
 ### Changed

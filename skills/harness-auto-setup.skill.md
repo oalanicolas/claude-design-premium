@@ -67,7 +67,11 @@ Build a mental binding object:
 
 ### Phase 3 — Write binding artifacts
 
-**Write `BOUND_DS.json`** with the binding object above plus `version: 1` and `configured: true`.
+**Write `BOUND_DS.json`** with the binding object above plus `version: 1`, `configured: true`, and a
+`voice` object (tagline, heroHeadline, heroSubhead, badge, ctaPrimary, ctaSecondary, themeLabel,
+surfaces, areaSuffix, searchPlaceholder, logoPath, footerNote, docTitle, docLead, deckCoverHeadline,
+deckCoverSubhead, welcomeEyebrow, welcomeHeadline, welcomeSubhead, closingEyebrow, closingHeadline).
+Derive `voice` from DS readme + manifest — mirror `scripts/extract-ds-voice.mjs` logic.
 
 **Write `styles.css`** — header comment + one `@import` per `globalCssPaths` entry:
 
@@ -83,17 +87,46 @@ Build a mental binding object:
 - `<script src="[bundle]">`
 - `<style>[chromeSelectors]{display:none !important;}</style>` if chrome detected
 
-### Phase 4 — Patch templates
+### Phase 4 — Patch + personalize templates
 
-For **every** `*.dc.html`:
+For **every** `*.dc.html`, apply **technical binding** then **voice + DS personalization**:
+
+**4a — Technical binding**
 
 1. Replace `{{DS_HELMET_BLOCK}}` with the helmet inner content from Phase 3 (indented).
 2. Replace all `{{BOUND_DS_ROOT}}`, `{{BOUND_DS_NAMESPACE}}`, `{{BOUND_DS_NAME}}`,
    `{{BOUND_DS_COMPONENT_COUNT}}` with binding values.
-3. In `Starter.dc.html` only: remove or comment out component gallery cards for components
-   **not** in `components` list. Keep prompts generic (reference namespace, not a fixed DS name).
 
-Do not delete template DCs (`AppShell`, `Landing`, `Deck`, `Doc`) — only patch bindings.
+**4b — Communication placeholders** (from `voice` / readme)
+
+Replace every voice placeholder with project-specific copy:
+
+| Placeholder | Source |
+|---|---|
+| `{{BOUND_DS_BADGE}}` | Short tagline chip from readme |
+| `{{BOUND_DS_HERO_HEADLINE}}` | Hero title with one `<em>` accent word |
+| `{{BOUND_DS_HERO_SUBHEAD}}` | Product description in brand voice |
+| `{{BOUND_DS_CTA_PRIMARY}}` / `{{BOUND_DS_CTA_SECONDARY}}` | CTAs from readme voice |
+| `{{BOUND_DS_THEME_LABEL}}` | `NOITE · DARK` or `DIA · LIGHT` from readme default theme |
+| `{{BOUND_DS_WELCOME_*}}` | AppShell demo hero — product voice, not Academia filler |
+| `{{BOUND_DS_AREA_SUFFIX}}` / `{{BOUND_DS_SEARCH_PLACEHOLDER}}` | First surface + search hint |
+| `{{BOUND_DS_DECK_COVER_*}}` / `{{BOUND_DS_CLOSING_*}}` | Deck capa + encerramento |
+| `{{BOUND_DS_DOC_TITLE}}` / `{{BOUND_DS_DOC_LEAD}}` | Doc masthead |
+| `{{BOUND_DS_LOGO_PATH}}` | Logo from DS assets or `assets/logo-gold.svg` |
+| `{{BOUND_DS_FOOTER_NOTE}}` | Footer line (© + optional Secured by) |
+
+**4c — DS-aware structure** (mirror `scripts/personalize-dc.mjs`)
+
+1. **Regenerate** `<!-- CDP:SURFACES -->` in `Landing.dc.html` from readme bullet surfaces.
+2. **Regenerate** `<!-- CDP:NAV-LINKS -->` from the same surfaces.
+3. **Regenerate** `// CDP:APP-NAV` items in `AppShell.dc.html` script from surfaces + icons.
+4. **Remove** blocks wrapped in `<!-- CDP:REQUIRES:ComponentName -->` when that component is
+   **not** in `components` (e.g. drop `BookCard` shelf if manifest has no BookCard).
+5. **Prune** `Starter.dc.html` gallery cards whose `CardTitle` names a component missing from manifest.
+6. Set `theme.default` in each DC script props to `voice.themeDefault`.
+
+Do not delete template DCs (`AppShell`, `Landing`, `Deck`, `Doc`) — personalize in place.
+Never leave Academia/Lendária demo copy when the bound DS is a different product.
 
 ### Phase 5 — Synthesize `DESIGN.md`
 
@@ -137,7 +170,7 @@ After setup, output:
 - Namespace: [namespace]
 - Components: [count] — [comma-separated list]
 - Files written: BOUND_DS.json, styles.css, ds-helmet.snippet.html, DESIGN.md
-- Files patched: [N] *.dc.html
+- Files patched: [N] *.dc.html (binding + voice + component pruning)
 - DESIGN.md: synthesized from [readme? tokens? cards?]
 - Blockers: [none | list]
 

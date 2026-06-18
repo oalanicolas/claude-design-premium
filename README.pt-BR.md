@@ -35,7 +35,7 @@ Abra uma **nova guia** no mesmo projeto e envie:
 GO
 ```
 
-Pronto. O harness lê `_ds/`, gera `DESIGN.md`, configura os templates e pergunta qual superfície desenhar primeiro.
+Pronto. O harness lê `_ds/`, gera `DESIGN.md`, personaliza os `*.dc.html` (comunicação + componentes do DS) e pergunta qual superfície desenhar primeiro.
 
 **Não precisa** de npm, git, terminal nem scripts dentro do canvas.
 

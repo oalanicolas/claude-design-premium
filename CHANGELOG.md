@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.1.1 — 2026-06-18
+
+### Fixed
+
+- Corrigido erro documental: `scripts/` **não** são "só fora do canvas" — rodam no canvas (Claude
+  executa a lógica JS), pareados com skills na ordem v1
+- Novo [`docs/script-pipeline.md`](docs/script-pipeline.md) — pipeline scripts → skills
+- `CLAUDE.md`: roteamento, `SCRIPTS APPLIED`, guardrails
+- Skills de auditoria voltam a exigir `detect-*` **antes** do julgamento
+
 ## 2.1.0 — 2026-06-18
 
 ### Added

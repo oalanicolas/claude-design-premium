@@ -38,10 +38,9 @@ the foundation skill that almost every other skill builds on.
 11. If a visual decision conflicts with `DESIGN.md` principles (e.g., introducing generic default chrome),
     flag the conflict explicitly before proceeding.
 12. Never invent new colors, spacing values, or type sizes.
-13. Outside Claude Design Web, maintainers may run dependency-free `scripts/*.mjs` helpers with plain
-    Node (built-ins only, no npm packages — see upstream
-    [claude-design-premium](https://github.com/oalanicolas/claude-design-premium)). Do not claim the
-    canvas ran them.
+13. Before this skill, execute `scripts/context-signals.mjs` if not run this session. After binding
+    checks, run native `check_design_system` when available. See
+    [`docs/script-pipeline.md`](../docs/script-pipeline.md).
 
 ## Output contract
 
@@ -59,8 +58,8 @@ the foundation skill that almost every other skill builds on.
   (interpretation) to change a value. -> Edit the file under the bound DS token directory; that is the
   only runtime token source in the canvas.
 - **Wrong DS binding:** Using a namespace or path from a different project. -> Re-read `BOUND_DS.json`.
-- **Unverified local maintenance:** Editing protocol/runtime docs without re-checking references. ->
-  Re-read the referenced files and run the `scripts/` linters outside the canvas.
+- **Skipping script preflight:** Jumping to judgment without context-signals or check_design_system. ->
+  Execute script pipeline steps first; report in `SCRIPTS APPLIED`.
 - **Over-application:** Enforcing the whole system in one heavy response. -> Prioritize the 2-3 most critical constraints; note the rest.
 
 ## Example invocation

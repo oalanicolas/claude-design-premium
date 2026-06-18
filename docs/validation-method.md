@@ -17,7 +17,8 @@ at least one component resolves in the design-system namespace.
 For brownfield exports, the strongest proof may instead be a clean manifest with populated
 `globalCssPaths`, `tokens`, and `cards` from the existing `preview/*.html` / `ui_kits/*` structure.
 
-This is the strongest proof. Repo-side scripts are only preflight.
+This is the strongest native proof. Harness `scripts/*.mjs` are deterministic preflight **inside the
+canvas** (Claude executes their JS logic) — see [`script-pipeline.md`](script-pipeline.md).
 
 ## Test 1B: root `CLAUDE.md` canary
 
@@ -107,6 +108,35 @@ from public-page title/lang/viewport requirements because Claude Design uses the
 the card preview.
 
 The text detector uses the same severity model: P1 means hard voice/style bans; P2 means review.
+
+## Test 1I: brownfield harness script pipeline (canvas)
+
+In a Claude Design project with `_ds/` and this harness uploaded, send `GO` in a new tab.
+
+**Expected:**
+
+1. Claude executes `context-signals` logic and reports `SCRIPTS APPLIED`.
+2. Pipeline runs in order per [`script-pipeline.md`](script-pipeline.md): detect-bound-ds →
+   extract-ds-voice → bootstrap-harness → personalize-dc.
+3. `BOUND_DS.json`, `styles.css`, `DESIGN.md` written; `*.dc.html` personalized (no `{{BOUND_DS_`
+   placeholders left).
+4. Response includes `HARNESS AUTO-SETUP` and asks for the first surface.
+
+**Fail:** Claude tells the user to run `node scripts/...` in the canvas, or skips scripts entirely.
+
+## Test 1J: local script mirror (brownfield v2)
+
+From harness root with `_ds/` present:
+
+```bash
+node scripts/context-signals.mjs
+node scripts/bootstrap-harness.mjs --check
+node scripts/detect-canvas-antipatterns.mjs .
+node scripts/detect-text-antipatterns.mjs CLAUDE.md DESIGN.md skills
+```
+
+**Expected:** JSON from context-signals includes `scriptPipeline`; bootstrap --check passes;
+antipattern detectors run without npm install.
 
 ## Test 2: skill routing
 

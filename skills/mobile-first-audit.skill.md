@@ -37,7 +37,8 @@ adequate, and there is no horizontal overflow: a required gate before any screen
 8. **Responsive media & performance**: Images have stable dimensions/aspect ratios; heavy media is
    lazy-loaded when appropriate; complex sections use progressive disclosure on mobile.
 9. **Repo-side preflight**: Outside Claude Design Web (plain Node, built-ins only, no npm), when static
-   files are available, run `node scripts/detect-canvas-antipatterns.mjs <path>` to catch deterministic mobile risks such as
+   files are available, execute `scripts/detect-canvas-antipatterns.mjs` logic on those paths **first**
+   (canvas: read script and apply checks). See [`docs/script-pipeline.md`](../docs/script-pipeline.md). Catches deterministic mobile risks such as
    missing viewport meta, large fixed widths, `100vw` overflow traps, and viewport-based font sizing.
 
 ## Output contract

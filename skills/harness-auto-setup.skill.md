@@ -26,12 +26,17 @@ Skip only when **all** pass:
 - `styles.css` has `@import` lines pointing at the bound DS
 - All `*.dc.html` helmets are patched (no `{{` placeholders)
 
-## Procedure (canvas-safe — write files, no shell)
+## Procedure (canvas — execute script pipeline)
 
-Per [`docs/canvas-runtime.md`](../docs/canvas-runtime.md):
-the canvas cannot run `git`, `npm install`, package scripts, or shell. It **can** read and write
-project files. Auto-setup uses file writes only — not `node scripts/bootstrap-harness.mjs` (that
-mirror exists for local maintenance outside the canvas; Node built-ins only, no npm packages).
+Per [`docs/script-pipeline.md`](../docs/script-pipeline.md) and [`docs/canvas-runtime.md`](../docs/canvas-runtime.md):
+Claude Design supports JavaScript. **Read and execute** each script's logic against project files —
+do not skip scripts or hand-wave their outputs. No `git`, `npm`, or `node` shell — apply the JS
+algorithms directly. Local `node scripts/*.mjs` mirrors the same contract for maintainers.
+
+### Phase 0 — Context signals
+
+Execute `scripts/context-signals.mjs` logic first. If `harness.needsAutoSetup` is false and binding
+is valid, skip to the user's message (report scripts applied).
 
 ### Phase 1 — Repository inventory
 
@@ -165,6 +170,13 @@ When readme and tokens disagree, **tokens win** — note mismatches inline.
 After setup, output:
 
 ```markdown
+## SCRIPTS APPLIED
+- context-signals: [yes/no]
+- detect-bound-ds: [yes/no]
+- extract-ds-voice: [yes/no]
+- bootstrap-harness: [yes/no]
+- personalize-dc: [yes/no]
+
 ## HARNESS AUTO-SETUP
 - DS detected: [name] (`[root]`)
 - Namespace: [namespace]
@@ -183,8 +195,10 @@ Do not output the full SKILLS APPLIED block on setup-only turns unless UI was al
 ## Failure modes
 
 - **Skipping setup on a greeting:** User says "oi" but harness is unbound. -> Run setup first anyway.
-- **Asking user to run shell/npm:** Canvas has no shell and no `npm install`. -> Write files in canvas.
-  `node scripts/*.mjs` is valid only outside the canvas (built-ins only, per upstream LIMITATIONS.md).
+- **Skipping scripts:** Canvas executes `scripts/*.mjs` by reading and applying their JS logic. ->
+  Run pipeline steps 0–4 in order per `docs/script-pipeline.md`.
+- **Asking user to run shell/npm:** No `node`/`npm`/`git` shell in canvas. -> Execute script algorithms
+  directly; write file outputs.
 - **Template DESIGN.md left in place:** §1 still says "Describe...". -> Phase 5 is mandatory.
 - **Gallery shows missing components:** BookCard in Starter but not in manifest. -> Prune gallery.
 - **Inventing tokens:** DESIGN.md must reference real `var(--*)` from token CSS, not guesses.

@@ -90,6 +90,18 @@ const signals = {
     hasCanvasAntipatterns: exists('scripts/detect-canvas-antipatterns.mjs'),
     hasTextAntipatterns: exists('scripts/detect-text-antipatterns.mjs'),
   },
+  scriptPipeline: [
+    'context-signals.mjs',
+    'detect-bound-ds.mjs',
+    'extract-ds-voice.mjs',
+    'bootstrap-harness.mjs',
+    'personalize-dc.mjs',
+    'check_design_system (native)',
+    'design-system-guardian.skill.md',
+    'detect-canvas-antipatterns.mjs (+ audit skills)',
+    'detect-text-antipatterns.mjs (+ text-integrity-audit)',
+  ],
+  docs: 'docs/script-pipeline.md',
   recommendedChecks: dsDetection.ok
     ? [
         'node scripts/bootstrap-harness.mjs --check',

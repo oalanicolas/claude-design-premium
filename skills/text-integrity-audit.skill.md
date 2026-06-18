@@ -44,7 +44,8 @@ syntax, and plain punctuation before it is treated as final.
 9. **Documentation pass**: Keep claims procedural and evidence-scoped. Do not promise determinism,
    compliance, production readiness, performance, or native behavior without a validation path.
 10. **Repo-side preflight**: Outside Claude Design Web (plain Node, built-ins only, no npm), when files
-    are available, run `node scripts/detect-text-antipatterns.mjs <path>` for deterministic P1 checks and P2 review
+    are available, execute `scripts/detect-text-antipatterns.mjs` logic on those paths **first**
+    (canvas: read script and apply checks). See [`docs/script-pipeline.md`](../docs/script-pipeline.md)
     notes. Use `--strict` only when you want P2 findings to fail local preflight. Do not claim Claude
     Design Web ran this script.
 

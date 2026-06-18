@@ -32,9 +32,10 @@ It **influences** model behavior through high-signal instructions and selective 
 - It does not work equally well with every model or every prompt style. Results vary.
 - It does not install new native Skills inside Claude Design Web. Claude Design has a fixed product
   Skill set; `.skill.md` files are document-backed procedures, not product Skills.
-- Its deterministic scripts are repo-side maintenance helpers. Claude Design Web itself does not run
-  them; use them before handoff or while maintaining the starter locally. They must remain
-  dependency-free JavaScript using Node built-ins only.
+- Its deterministic `scripts/*.mjs` run **inside the canvas** when Claude reads and executes their
+  JavaScript logic against project files (paired with skills per `docs/script-pipeline.md`). Local
+  `node scripts/...` mirrors the same checks for maintainers. Scripts must remain dependency-free
+  (Node built-ins only).
 
 ## Known Weaknesses
 

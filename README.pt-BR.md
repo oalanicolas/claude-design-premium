@@ -35,9 +35,11 @@ Abra uma **nova guia** no mesmo projeto e envie:
 GO
 ```
 
-Pronto. O harness lê `_ds/`, gera `DESIGN.md`, personaliza os `*.dc.html` (comunicação + componentes do DS) e pergunta qual superfície desenhar primeiro.
+Pronto. O harness executa o pipeline de scripts + skills: lê `_ds/`, gera `DESIGN.md`, personaliza os
+`*.dc.html` e pergunta qual superfície desenhar primeiro.
 
-**Não precisa** de npm, git, terminal nem scripts dentro do canvas.
+**Não precisa** de npm, git nem terminal. Os `scripts/*.mjs` rodam **dentro do canvas** — Claude lê e
+aplica a lógica JavaScript (pareado com as skills na ordem certa).
 
 ---
 
@@ -45,11 +47,14 @@ Pronto. O harness lê `_ds/`, gera `DESIGN.md`, personaliza os `*.dc.html` (comu
 
 | Item | Função |
 |---|---|
-| `CLAUDE.md` | Protocolo + auto-setup |
+| `CLAUDE.md` | Protocolo, roteamento, ordem scripts → skills |
 | `DESIGN.md` | Identidade visual (gerado no passo 4) |
-| `skills/` | Auditorias, polish, handoff |
+| `skills/` | Auditorias, polish, handoff (pareadas com scripts) |
+| `scripts/` | Pipeline determinístico JS — **base do harness no canvas** |
 | `*.dc.html` | Templates de superfície |
-| `scripts/` | Opcional — só fora do canvas |
+| `support.js`, `deck-stage.js` | Runtime browser dos DCs |
+
+Ordem: [`docs/script-pipeline.md`](docs/script-pipeline.md)
 
 O harness **não traz** `_ds/` — isso já está no seu projeto.
 
@@ -57,6 +62,7 @@ O harness **não traz** `_ds/` — isso já está no seu projeto.
 
 ## Mais detalhes
 
+- Pipeline scripts + skills: [`docs/script-pipeline.md`](docs/script-pipeline.md)
 - Limitações: [`LIMITATIONS.md`](LIMITATIONS.md)
 - Runtime do canvas: [`docs/canvas-runtime.md`](docs/canvas-runtime.md)
-- Versão antiga (greenfield): [`_archive/v1/`](_archive/v1/) — ignore se só quer o fluxo acima
+- Versão antiga (greenfield): [`_archive/v1/`](_archive/v1/)

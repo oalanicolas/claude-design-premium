@@ -29,9 +29,9 @@ defaulting to familiar SaaS, portfolio, dashboard, or landing-page templates.
 4. **Inspect repeated scaffold patterns**: Look for default hero + stats blocks, endless equal card grids,
    decorative gradient text, generic glass panels, overused tiny uppercase labels, arbitrary blobs,
    shallow dashboard chrome, or decorative motion with no job.
-   Outside Claude Design Web (plain Node, built-ins only, no npm), when static files are available, use
-   `node scripts/detect-canvas-antipatterns.mjs <path>` as a deterministic preflight for measurable
-   code-level tells. Treat script findings as evidence, not as a full originality judgment.
+   **First:** execute `scripts/detect-canvas-antipatterns.mjs` logic on the target `*.dc.html` paths
+   (read the script, apply its checks in the canvas). Treat findings as evidence, not as a full
+   originality judgment. See [`docs/script-pipeline.md`](../docs/script-pipeline.md).
 5. **Check brand/product fit**:
    - Brand surfaces may be more expressive, image-led, atmospheric, or editorial.
    - Product surfaces must stay operational, dense enough, calm enough, and easy to scan repeatedly.

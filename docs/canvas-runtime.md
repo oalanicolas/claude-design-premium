@@ -93,7 +93,9 @@ stateful interaction makes it worth the extra runtime.
 
 Use Claude Design Web for: authoring the static system, previewing HTML/CSS/JS, validating visual
 direction / responsiveness / accessibility heuristics, and extracting a reusable component inventory.
-For design-system proof, prefer the native `check_design_system` gate over repo-side scripts.
+For design-system proof, use native `check_design_system` **plus** the harness `scripts/*.mjs`
+pipeline ([`script-pipeline.md`](script-pipeline.md)). Claude executes script JS logic in the canvas;
+skills pair with scripts in a fixed order.
 
 Move to an **external repo** for: Astro/Vite/Next implementation, package management, lint/tests/CI,
 build gates, and real accessibility/performance validation. The real build never lives in the canvas.

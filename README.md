@@ -36,9 +36,11 @@ Open a **new tab** in the same project and send:
 GO
 ```
 
-Done. The harness reads `_ds/`, generates `DESIGN.md`, personalizes `*.dc.html` (voice + DS components), and asks what surface to design first.
+Done. The harness runs the **script + skill pipeline**: reads `_ds/`, generates `DESIGN.md`,
+personalizes `*.dc.html`, and asks what surface to design first.
 
-**No** npm, git, terminal, or scripts required inside the canvas.
+**No** npm, git, or terminal required. `scripts/*.mjs` **run inside the canvas** — Claude reads and
+applies their JavaScript logic (paired with skills in the correct order).
 
 ---
 
@@ -46,11 +48,14 @@ Done. The harness reads `_ds/`, generates `DESIGN.md`, personalizes `*.dc.html` 
 
 | Item | Role |
 |---|---|
-| `CLAUDE.md` | Protocol + auto-setup |
+| `CLAUDE.md` | Protocol, routing, scripts → skills order |
 | `DESIGN.md` | Visual identity (generated in step 4) |
-| `skills/` | Audits, polish, handoff |
+| `skills/` | Audits, polish, handoff (paired with scripts) |
+| `scripts/` | Deterministic JS pipeline — **harness foundation in canvas** |
 | `*.dc.html` | Surface templates |
-| `scripts/` | Optional — outside canvas only |
+| `support.js`, `deck-stage.js` | Browser runtime for DCs |
+
+Order: [`docs/script-pipeline.md`](docs/script-pipeline.md)
 
 The harness does **not** ship `_ds/` — that already lives in your project.
 
@@ -58,6 +63,7 @@ The harness does **not** ship `_ds/` — that already lives in your project.
 
 ## More details
 
+- Script + skill pipeline: [`docs/script-pipeline.md`](docs/script-pipeline.md)
 - Limitations: [`LIMITATIONS.md`](LIMITATIONS.md)
 - Canvas runtime: [`docs/canvas-runtime.md`](docs/canvas-runtime.md)
-- Old version (greenfield): [`_archive/v1/`](_archive/v1/) — ignore if you only need the flow above
+- Old version (greenfield): [`_archive/v1/`](_archive/v1/)

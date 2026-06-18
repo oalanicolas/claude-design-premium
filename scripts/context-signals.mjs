@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
+import { detectBoundDs } from './detect-bound-ds.mjs';
 
 const root = process.cwd();
 
@@ -13,15 +14,6 @@ function read(rel) {
     return fs.readFileSync(path.join(root, rel), 'utf8');
   } catch {
     return '';
-  }
-}
-
-function parseJson(rel) {
-  try {
-    JSON.parse(read(rel));
-    return true;
-  } catch {
-    return false;
   }
 }
 
@@ -38,12 +30,11 @@ function walk(dir, files = []) {
 }
 
 const claude = read('CLAUDE.md');
-const runtime = read('docs/canvas-runtime.md');
-const staticFiles = walk('starter-kit/static');
+const design = read('DESIGN.md');
+const bound = read('BOUND_DS.json');
 const skillFiles = walk('skills').filter((file) => file.endsWith('.skill.md'));
-const nativeTemplates = walk('templates').filter((file) => /\/index\.html$/.test(file));
-const nativeComponents = walk('components').filter((file) => file.endsWith('.jsx'));
-const nativeComponentCards = walk('components').filter((file) => file.endsWith('.html'));
+const dcFiles = walk('.').filter((file) => file.endsWith('.dc.html'));
+const dsDetection = detectBoundDs(root);
 
 const signals = {
   protocol: {
@@ -51,50 +42,65 @@ const signals = {
     hasCanary: claude.includes('CDP-CLAUDE-OK'),
     hasLiteralRoutingTable: /Literal routing table/i.test(claude),
     hasMandatoryReporting: claude.includes('SKILLS APPLIED') && claude.includes('NOT APPLIED'),
+    referencesBoundDs: claude.includes('BOUND_DS.json'),
+    isAgnostic: !/academia-ds-460d36aa/i.test(claude),
     skillCount: skillFiles.length,
   },
-  runtime: {
-    hasCanvasRuntimeDoc: exists('docs/canvas-runtime.md'),
-    hasCanvasCoreDoc: exists('docs/canvas-core.md'),
-    documentsReactEscapeHatch: /React\/JSX in-browser/i.test(runtime),
-    documentsGlobalScriptHatch: /Self-contained UMD\/IIFE/i.test(runtime),
-    documentsStorageCaveat: /localStorage/.test(runtime) && /try\/catch/.test(runtime),
+  binding: {
+    hasBoundJson: exists('BOUND_DS.json'),
+    boundJsonParses: (() => {
+      try {
+        JSON.parse(bound);
+        return true;
+      } catch {
+        return false;
+      }
+    })(),
+    hasHelmetSnippet: exists('ds-helmet.snippet.html'),
+    dsDetected: dsDetection.ok,
+    dsName: dsDetection.binding?.name ?? null,
+    dsNamespace: dsDetection.binding?.namespace ?? null,
+    dsComponentCount: dsDetection.binding?.componentCount ?? 0,
+    dsError: dsDetection.ok ? null : dsDetection.error,
   },
-  tokens: {
+  design: {
+    hasDesignMd: exists('DESIGN.md'),
+    referencesBoundDs: design.includes('BOUND_DS.json') || design.includes('{{BOUND_DS'),
+    isAgnostic: !/Academia Lendária|Lendár\[IA\]/i.test(design),
+    needsAutoSetup: design.includes('CDP:UNCONFIGURED') || /Describe the product's visual register/i.test(design),
+  },
+  harness: {
+    needsAutoSetup:
+      read('styles.css').includes('UNBOUND') ||
+      !exists('BOUND_DS.json') ||
+      design.includes('CDP:UNCONFIGURED') ||
+      walk('.').some((f) => f.endsWith('.dc.html') && read(f).includes('{{DS_HELMET_BLOCK}}')),
+  },
+  canvas: {
+    dcCount: dcFiles.length,
+    hasStarter: exists('Starter.dc.html'),
     hasRootStyles: exists('styles.css'),
-    hasJsonExample: exists('design-tokens.json.example'),
-    jsonParses: parseJson('design-tokens.json.example'),
-    hasCssTokenSource: exists('starter-kit/static/tokens.css'),
-    hasTokenGenerator: exists('scripts/generate-design-tokens.mjs'),
+    stylesGenerated: read('styles.css').includes('bootstrap-harness.mjs'),
+    stylesUnbound: read('styles.css').includes('UNBOUND'),
   },
-  nativeDesignSystem: {
-    nativeTemplateCount: nativeTemplates.length,
-    hasPageBaseTemplate: exists('templates/page-base/index.html'),
-    hasLandingTemplate: exists('templates/landing/index.html'),
-    hasDeckTemplate: exists('templates/deck/index.html'),
-    hasDsBase: exists('templates/ds-base.js'),
-    componentCount: nativeComponents.length,
-    hasBotaoComponent: exists('components/Botao.jsx') && exists('components/Botao.d.ts') && exists('components/Botao.html'),
-    botaoUsesNativeExport: /\bexport\s+function\s+Botao\b/.test(read('components/Botao.jsx')),
-    dsCardCount: nativeComponentCards.filter((file) => read(file).includes('@dsCard')).length,
+  maintenance: {
+    hasDetectBoundDs: exists('scripts/detect-bound-ds.mjs'),
+    hasBootstrap: exists('scripts/bootstrap-harness.mjs'),
+    hasUnbind: exists('scripts/unbind-harness.mjs'),
+    hasCanvasAntipatterns: exists('scripts/detect-canvas-antipatterns.mjs'),
+    hasTextAntipatterns: exists('scripts/detect-text-antipatterns.mjs'),
   },
-  scaffold: {
-    staticFileCount: staticFiles.length,
-    hasStaticReadme: exists('starter-kit/static/README.md'),
-    hasGlobalScriptExample: exists('starter-kit/static/global-script-example/widget.js'),
-    hasReactExample: exists('starter-kit/static/react-example/component.jsx'),
-  },
-  textIntegrity: {
-    hasTextIntegritySkill: exists('skills/text-integrity-audit.skill.md'),
-    hasTextDetector: exists('scripts/detect-text-antipatterns.mjs'),
-  },
-  recommendedChecks: [
-    'node scripts/generate-design-tokens.mjs --check',
-    'node scripts/validate-cdp.mjs',
-    'node scripts/detect-canvas-antipatterns.mjs starter-kit/static',
-    'node scripts/detect-canvas-antipatterns.mjs templates',
-    'node scripts/detect-text-antipatterns.mjs README.md docs skills'
-  ],
+  recommendedChecks: dsDetection.ok
+    ? [
+        'node scripts/bootstrap-harness.mjs --check',
+        'node scripts/detect-canvas-antipatterns.mjs .',
+        'node scripts/detect-text-antipatterns.mjs CLAUDE.md DESIGN.md skills',
+      ]
+    : [
+        'node scripts/unbind-harness.mjs  # only if resetting',
+        '# add ./_ds/<bundle>/ then: node scripts/bootstrap-harness.mjs',
+        'node scripts/detect-canvas-antipatterns.mjs .',
+      ],
 };
 
 process.stdout.write(`${JSON.stringify(signals, null, 2)}\n`);

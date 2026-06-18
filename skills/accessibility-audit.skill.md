@@ -32,8 +32,8 @@ compliance certification.
    buttons or complex widgets; live regions for dynamic updates when applicable.
 7. **Document basics**: HTML has `lang`, a meaningful `<title>`, viewport meta for mobile, and
    landmark structure (`main`, `nav`, `header`, `footer`) where appropriate.
-8. **Repo-side preflight**: Outside Claude Design Web, when static files are available, run
-   `node scripts/detect-canvas-antipatterns.mjs <path>` to catch deterministic accessibility risks
+8. **Repo-side preflight**: Outside Claude Design Web (plain Node, built-ins only, no npm), when static
+   files are available, run `node scripts/detect-canvas-antipatterns.mjs <path>` to catch deterministic accessibility risks
    such as missing `lang`, missing title, images without `alt`, removed outlines, and missing reduced
    motion fallbacks.
 

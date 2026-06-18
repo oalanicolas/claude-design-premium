@@ -10,7 +10,8 @@ The Claude Design Premium Protocol is a **context engineering pattern**. It work
 - Loading relevant `.skill.md` documents into the model's context as document-backed procedures.
 - Using clear routing rules and checkpoint reporting for deliverables, audits, final approval, and
   handoff.
-- Anchoring generation in `DESIGN.md` + `starter-kit/static/tokens.css`.
+- Anchoring generation in `DESIGN.md` + the bound DS token CSS under `_ds/` (or
+  `starter-kit/static/tokens.css` in archived greenfield v1).
 
 It **influences** model behavior through high-signal instructions and selective loading. It does **not** compile, sandbox, or runtime-enforce anything.
 

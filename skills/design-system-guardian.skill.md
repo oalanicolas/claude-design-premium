@@ -19,27 +19,29 @@ the foundation skill that almost every other skill builds on.
 
 ## Procedure
 
-1. Load `DESIGN.md` and the active token CSS as non-negotiable constraints. In greenfield starter
-   projects this is usually `starter-kit/static/tokens.css`; in brownfield Claude Design exports,
-   use the CSS graph reported by `_ds_manifest.json.globalCssPaths` such as `colors_and_type.css`.
-2. Treat `design-tokens.json` as a generated/reference artifact for documentation and handoff, not
-   the CSS runtime source.
-3. For every color decision, use a token from the active token CSS (prefer semantic tokens:
+1. Read `BOUND_DS.json` to resolve the active binding: `root`, `namespace`, `globalCssPaths`,
+   `components`, and `bundle`.
+2. Load `DESIGN.md` and the bound DS token CSS as non-negotiable constraints. Build by loading
+   `BOUND_DS.json` → `bundle` and composing `BOUND_DS.json` → `namespace` components.
+3. Treat the bound DS token CSS as the runtime source of truth; there is no JSON token runtime in
+   the canvas.
+4. For every color decision, use a token from the active token CSS (prefer semantic tokens:
    `primary`, `destructive`, etc.).
-4. For every spacing decision, use a value from the spacing scale.
-5. For typography, respect the type scale, weights, and line heights defined in tokens.
-6. For radius, elevation, and motion, use the defined token values exactly.
-7. If static canvas CSS is being written, use CSS custom properties from the active token CSS; do not
+5. For every spacing decision, use a value from the spacing scale.
+6. For typography, respect the type scale, weights, and line heights defined in tokens.
+7. For radius, elevation, and motion, use the defined token values exactly.
+8. If static canvas CSS is being written, use CSS custom properties from the active token CSS; do not
    import or reference JSON directly from CSS.
-8. If generated token JSON and the active token CSS disagree, treat the CSS as the canvas source of
+9. If generated token JSON and the active token CSS disagree, treat the CSS as the canvas source of
    truth and flag that the JSON must be regenerated outside Claude Design Web.
-9. Check component and brand alignment: does this match how the system defines this component?
-10. If a visual decision conflicts with `DESIGN.md` principles (e.g., introducing generic default chrome),
-   flag the conflict explicitly before proceeding.
-11. Never invent new colors, spacing values, or type sizes.
-12. Outside Claude Design Web, when maintaining this starter repo, run `node scripts/validate-cdp.mjs`
-    to deterministically check protocol files, generated token JSON, static examples, and stale
-    runtime claims. Do not claim Claude Design Web ran this script.
+10. Check component and brand alignment: does this match how the bound DS defines this component?
+11. If a visual decision conflicts with `DESIGN.md` principles (e.g., introducing generic default chrome),
+    flag the conflict explicitly before proceeding.
+12. Never invent new colors, spacing values, or type sizes.
+13. Outside Claude Design Web, maintainers may run dependency-free `scripts/*.mjs` helpers with plain
+    Node (built-ins only, no npm packages — see upstream
+    [claude-design-premium](https://github.com/oalanicolas/claude-design-premium)). Do not claim the
+    canvas ran them.
 
 ## Output contract
 
@@ -51,12 +53,14 @@ the foundation skill that almost every other skill builds on.
 
 - **Token invention:** Hard-coded colors or spacing when tokens exist. -> Correct and reference the token.
 - **Generic aesthetic drift:** Layouts that feel like generic SaaS screens. -> Re-anchor in `DESIGN.md` §1-2.
-- **Reference copying without brand logic:** Cloning a reference visually without applying the brand. -> Re-derive from `DESIGN.md`.
+- **Reference copying without brand logic:** Cloning a reference visually without applying the brand. -> Re-derive from `DESIGN.md` + bound DS readme.
 - **Treating tokens as suggestions:** Using tokens loosely. -> Tokens are constraints, not hints.
-- **JSON-first token edits in canvas:** Treating `design-tokens.json` as the runtime source. -> Use
-  CSS custom properties from the active token CSS; regenerate JSON later outside the canvas.
-- **Unverified local maintenance:** Updating protocol/runtime docs without running the repo-side
-  validator. -> Run `node scripts/validate-cdp.mjs` outside the canvas.
+- **Token edits in the wrong place:** Editing root `styles.css` (a re-export) or `DESIGN.md`
+  (interpretation) to change a value. -> Edit the file under the bound DS token directory; that is the
+  only runtime token source in the canvas.
+- **Wrong DS binding:** Using a namespace or path from a different project. -> Re-read `BOUND_DS.json`.
+- **Unverified local maintenance:** Editing protocol/runtime docs without re-checking references. ->
+  Re-read the referenced files and run the `scripts/` linters outside the canvas.
 - **Over-application:** Enforcing the whole system in one heavy response. -> Prioritize the 2-3 most critical constraints; note the rest.
 
 ## Example invocation

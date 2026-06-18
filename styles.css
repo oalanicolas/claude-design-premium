@@ -1,3 +1,9 @@
-/* styles.css: root design-system entry for Claude Design's native compiler. */
-@import "starter-kit/static/tokens.css";
-@import "starter-kit/static/styles.css";
+/* =============================================================================
+   styles.css — root canvas token entry (UNBOUND)
+
+   This harness ships without a design system. On first session, harness-auto-setup
+   (in canvas) writes the @imports below from _ds_manifest.json → globalCssPaths.
+
+   Outside the canvas only: node scripts/bootstrap-harness.mjs (Node built-ins, no npm).
+   Do NOT add token values here — edit them in the bound DS.
+   ============================================================================= */

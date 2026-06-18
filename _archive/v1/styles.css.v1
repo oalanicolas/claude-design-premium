@@ -1,0 +1,3 @@
+/* styles.css: root design-system entry for Claude Design's native compiler. */
+@import "starter-kit/static/tokens.css";
+@import "starter-kit/static/styles.css";

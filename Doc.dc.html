@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  {{DS_HELMET_BLOCK}}
+</helmet>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     TEMPLATE · DOC ({{BOUND_DS_NAME}} · documento editorial imprimível)
+     Coluna de leitura ~720px, prosa em .al-md (Newsreader serif).
+     Duplique como [Nome].dc.html. Para impressão em papel claro, troque
+     o wrapper raiz por <div class="light"> (tema warm paper do DS).
+     ════════════════════════════════════════════════════════════════════ -->
+
+<div class="{{ themeClass }}" style="min-height:100vh;background:var(--background);color:var(--foreground);font-family:var(--font-sans);padding:80px clamp(20px,6vw,40px) 120px;">
+  <article style="max-width:720px;margin:0 auto;">
+
+    <!-- ───────── MASTHEAD ───────── -->
+    <header style="display:flex;flex-direction:column;gap:20px;padding-bottom:36px;margin-bottom:48px;border-bottom:1px solid var(--hairline-strong);">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="display:inline-flex;align-items:center;gap:10px;"><img src="assets/logo-gold.svg" alt="{{BOUND_DS_NAME}}" width="22" height="22" style="display:block;flex-shrink:0;"><span style="font-family:var(--font-display);font-size:var(--font-size-lg);">{{BOUND_DS_NAME}}</span></span>
+        <span class="al-data" style="color:var(--muted-foreground);">DOCUMENTO INTERNO · CONFIDENCIAL</span>
+      </div>
+      <p class="al-eyebrow" style="color:var(--primary);margin:0;">Memorando de produto</p>
+      <h1 style="font-family:var(--font-display);font-weight:300;font-size:var(--font-size-5xl);line-height:1.04;letter-spacing:-0.01em;margin:0;">A leitura como <em>hábito</em>, não como meta.</h1>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center;">
+        <span class="al-data" style="color:var(--muted-foreground);">POR ALAN NICOLAS</span>
+        <span style="width:4px;height:4px;border-radius:var(--radius-full);background:var(--muted-foreground);"></span>
+        <span class="al-data" style="color:var(--muted-foreground);">15 JUN 2026</span>
+        <span style="width:4px;height:4px;border-radius:var(--radius-full);background:var(--muted-foreground);"></span>
+        <span class="al-data" style="color:var(--muted-foreground);">6 MIN DE LEITURA</span>
+      </div>
+    </header>
+
+    <!-- ───────── LEAD ───────── -->
+    <p style="font-family:var(--font-serif);font-style:italic;font-size:var(--font-size-2xl);line-height:1.45;color:var(--muted-foreground);margin:0 0 48px;">A maioria das plataformas mede horas assistidas. Nós decidimos medir outra coisa: a sequência de dias em que alguém volta — porque é a recorrência, e não o consumo, que constrói legado.</p>
+
+    <!-- ───────── CORPO (prosa .al-md) ───────── -->
+    <div class="al-md" style="--reading-size:18px;">
+      <h2>O problema da métrica errada</h2>
+      <p>Por anos, o setor de educação digital celebrou o tempo de tela como sinal de engajamento. Mas tempo assistido não é aprendizado — é exposição. Um aluno pode acumular cem horas de vídeo e não mudar um único comportamento.</p>
+      <p>A pergunta que reorganizou o nosso produto foi simples: <strong>o que realmente prova que alguém está evoluindo?</strong> A resposta não estava nas horas. Estava na <em>volta</em>.</p>
+
+      <h2>Três decisões de design</h2>
+      <p>A partir dessa virada, três escolhas guiaram cada tela:</p>
+      <ul>
+        <li><strong>Sequência acima de volume.</strong> A métrica de topo deixou de ser "aulas concluídas" e passou a ser a sequência de leitura diária.</li>
+        <li><strong>Condensação radical.</strong> Resumos por IA que entregam a tese de um livro em minutos, removendo o atrito da primeira leitura.</li>
+        <li><strong>Aplicação medida.</strong> Cada trilha termina com um gatilho de aplicação no mundo real — não com um quiz.</li>
+      </ul>
+
+      <blockquote>Conhecimento sem aplicação é entretenimento. O nosso trabalho é fechar essa distância.</blockquote>
+
+      <h2>O resultado em números</h2>
+      <p>Seis meses após a mudança, a conclusão da primeira trilha subiu de 61% para 94%, e a sequência média de leitura estabilizou em 12 dias. Não otimizamos o consumo — otimizamos o retorno.</p>
+    </div>
+
+    <!-- ───────── CALLOUT ───────── -->
+    <div style="margin:48px 0;">
+      <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Alert" variant="info" hint-size="100%,72px">Próximo passo: levar a métrica de sequência para a Comunidade, transformando a recorrência individual em ritual coletivo.</x-import>
+    </div>
+
+    <!-- ───────── ASSINATURA / FOOTER ───────── -->
+    <footer style="margin-top:56px;padding-top:28px;border-top:1px solid var(--hairline);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+      <span style="font-family:var(--font-serif);font-style:italic;font-size:var(--font-size-base);color:var(--muted-foreground);">{{BOUND_DS_NAME}} · Estúdio de Produto</span>
+      <span class="al-data" style="color:var(--muted-foreground);">PÁG. 1 / 1</span>
+    </footer>
+
+  </article>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:900,&quot;height&quot;:1180},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;default&quot;:&quot;dark&quot;}}">
+class Component extends DCLogic {
+  renderVals() { return { themeClass: this.props.theme === 'light' ? 'light' : '' }; }
+}
+</script>
+</body>
+</html>

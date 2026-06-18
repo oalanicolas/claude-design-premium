@@ -19,9 +19,8 @@ move cleanly to Astro, Vite, or Next without locking the design phase to a frame
 ## Procedure
 
 1. Confirm the visual direction is approved; if not, recommend `ui-audit` or `polish-phase` first.
-2. Extract a component inventory using stable names from `starter-kit/` where possible:
-   `MarketingLayout`, `AppShell`, `MarketingNav`, `Button`, `Card`, `SectionHeader`, `Hero`,
-   `DashboardFrame`.
+2. Read `BOUND_DS.json` → `components` and `DESIGN.md` §5-6. Extract a component inventory from the
+   bound namespace and any named patterns documented in the project.
 3. Map each component to its source tokens: color, spacing, typography, radius, elevation, and motion.
 4. Separate framework-neutral anatomy from framework-specific implementation notes.
 5. Recommend the target only when the product surface makes it clear:
@@ -56,6 +55,7 @@ Do not generate a full app unless explicitly asked.
 ## Example invocation
 
 ```text
-Run framework-handoff on this approved dashboard. Extract reusable pieces using starter-kit names,
-recommend Astro/Vite/Next only if appropriate, and list token dependencies and remaining blockers.
+Run framework-handoff on this approved dashboard. Extract reusable pieces using the bound DS
+component and pattern names from BOUND_DS.json and DESIGN.md §6, recommend Astro/Vite/Next only if
+appropriate, and list token dependencies and remaining blockers.
 ```

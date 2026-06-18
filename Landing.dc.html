@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  {{DS_HELMET_BLOCK}}
+</helmet>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     TEMPLATE · LANDING ({{BOUND_DS_NAME}} · register marketing / logged-out)
+     Registro separado do app shell: nav de marketing, heros expressivos.
+     Duplique como [Nome].dc.html. Mantenha 1 CTA dourado por seção, ar
+     generoso, hairlines como textura. Sem gradientes (exceto capas).
+     ════════════════════════════════════════════════════════════════════ -->
+
+<div class="{{ themeClass }}" style="background:var(--background);color:var(--foreground);font-family:var(--font-sans);min-height:100vh;">
+
+  <!-- ───────── NAV DE MARKETING ───────── -->
+  <header style="position:sticky;top:0;z-index:20;backdrop-filter:blur(12px);background:hsl(var(--background-hsl) / 0.82);border-bottom:1px solid var(--hairline);">
+    <nav style="max-width:1200px;margin:0 auto;height:72px;display:flex;align-items:center;justify-content:space-between;gap:32px;padding:0 clamp(20px,5vw,32px);">
+      <span style="display:inline-flex;align-items:center;gap:11px;"><img src="assets/logo-gold.svg" alt="{{BOUND_DS_NAME}}" width="26" height="26" style="display:block;flex-shrink:0;"><span style="font-family:var(--font-display);font-size:var(--font-size-xl);">{{BOUND_DS_NAME}}</span></span>
+      <div style="display:flex;align-items:center;gap:36px;font-size:var(--font-size-sm);color:var(--muted-foreground);">
+        <a href="#" style="color:inherit;text-decoration:none;">Biblioteca</a>
+        <a href="#" style="color:inherit;text-decoration:none;">[Área]</a>
+        <a href="#" style="color:inherit;text-decoration:none;">Comunidade</a>
+        <a href="#" style="color:inherit;text-decoration:none;">Mentes Sintéticas</a>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <a href="#" style="font-size:var(--font-size-sm);color:var(--muted-foreground);text-decoration:none;">Entrar</a>
+        <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Button" size="sm" hint-size="auto,40px">Começar agora</x-import>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ───────── HERO ───────── -->
+  <section style="max-width:1080px;margin:0 auto;padding:140px clamp(20px,5vw,32px) 120px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:36px;">
+    <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Badge" variant="brand" hint-size="auto,28px">Sabedoria secular + IA</x-import>
+    <h1 style="font-family:var(--font-display);font-weight:300;font-size:clamp(48px,8vw,96px);line-height:0.98;letter-spacing:-0.02em;margin:0;max-width:18ch;">Unir e potencializar pessoas <em>lendárias.</em></h1>
+    <p style="font-family:var(--font-serif);font-style:italic;font-size:var(--font-size-2xl);color:var(--muted-foreground);max-width:42ch;line-height:1.45;margin:0;">A plataforma de educação AI-first que transforma conhecimento em hábito — e hábito em legado.</p>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:8px;">
+      <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Button" size="lg" hint-size="auto,56px">Expandir minha consciência</x-import>
+      <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Button" variant="outline" size="lg" hint-size="auto,56px">Ver a Biblioteca</x-import>
+    </div>
+  </section>
+
+  <!-- ───────── PROVA SOCIAL ───────── -->
+  <section style="border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);">
+    <div style="max-width:1200px;margin:0 auto;padding:40px clamp(20px,5vw,32px);display:flex;flex-wrap:wrap;justify-content:space-around;gap:32px;align-items:center;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><span style="font-family:var(--font-display);font-weight:300;font-size:var(--font-size-4xl);color:var(--primary);">3.847</span><span class="al-data" style="color:var(--muted-foreground);">MEMBROS ATIVOS</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><span style="font-family:var(--font-display);font-weight:300;font-size:var(--font-size-4xl);">240+</span><span class="al-data" style="color:var(--muted-foreground);">LIVROS CONDENSADOS</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><span style="font-family:var(--font-display);font-weight:300;font-size:var(--font-size-4xl);">94<span style="color:var(--primary);">%</span></span><span class="al-data" style="color:var(--muted-foreground);">CONCLUSÃO DA 1ª TRILHA</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;"><span style="font-family:var(--font-display);font-weight:300;font-size:var(--font-size-4xl);">4.9</span><span class="al-data" style="color:var(--muted-foreground);">AVALIAÇÃO MÉDIA</span></div>
+    </div>
+  </section>
+
+  <!-- ───────── FEATURES ───────── -->
+  <section style="max-width:1200px;margin:0 auto;padding:120px clamp(20px,5vw,32px);display:flex;flex-direction:column;gap:56px;">
+    <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.SectionHeader" eyebrow="O que você recebe" title="Quatro estúdios, um propósito" hint-size="100%,72px"></x-import>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:1px;background:var(--hairline);border:1px solid var(--hairline);">
+      <div style="background:var(--background);padding:40px 32px;display:flex;flex-direction:column;gap:16px;">
+        <i class="iconoir-book" aria-hidden="true" style="font-size:30px;color:var(--primary);"></i>
+        <h3 style="font-family:var(--font-serif);font-weight:400;font-size:var(--font-size-2xl);margin:0;line-height:1.1;">Biblioteca</h3>
+        <p style="font-size:var(--font-size-base);color:var(--muted-foreground);line-height:1.55;margin:0;">Resumos condensados por IA, audiobooks e coleções. Leia em minutos o que levaria horas.</p>
+      </div>
+      <div style="background:var(--background);padding:40px 32px;display:flex;flex-direction:column;gap:16px;">
+        <i class="iconoir-graduation-cap" aria-hidden="true" style="font-size:30px;color:var(--primary);"></i>
+        <h3 style="font-family:var(--font-serif);font-weight:400;font-size:var(--font-size-2xl);margin:0;line-height:1.1;">[Área]</h3>
+        <p style="font-size:var(--font-size-base);color:var(--muted-foreground);line-height:1.55;margin:0;">Trilhas, sessões ao vivo e certificados. Aprendizado que vira aplicação medida.</p>
+      </div>
+      <div style="background:var(--background);padding:40px 32px;display:flex;flex-direction:column;gap:16px;">
+        <i class="iconoir-brain" aria-hidden="true" style="font-size:30px;color:var(--primary);"></i>
+        <h3 style="font-family:var(--font-serif);font-weight:400;font-size:var(--font-size-2xl);margin:0;line-height:1.1;">Mentes Sintéticas</h3>
+        <p style="font-size:var(--font-size-base);color:var(--muted-foreground);line-height:1.55;margin:0;">Clones cognitivos de grandes pensadores, disponíveis para dialogar 24h.</p>
+      </div>
+      <div style="background:var(--background);padding:40px 32px;display:flex;flex-direction:column;gap:16px;">
+        <i class="iconoir-group" aria-hidden="true" style="font-size:30px;color:var(--primary);"></i>
+        <h3 style="font-family:var(--font-serif);font-weight:400;font-size:var(--font-size-2xl);margin:0;line-height:1.1;">Comunidade</h3>
+        <p style="font-size:var(--font-size-base);color:var(--muted-foreground);line-height:1.55;margin:0;">Feed, ranking e eventos. Quem aplica junto, permanece — e prospera.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────── DEPOIMENTO ───────── -->
+  <section style="border-top:1px solid var(--hairline);">
+    <div style="max-width:900px;margin:0 auto;padding:120px clamp(20px,5vw,32px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:40px;">
+      <p style="font-family:var(--font-serif);font-style:italic;font-size:clamp(28px,4vw,44px);line-height:1.3;margin:0;">"Em três meses li mais — e <em>apliquei</em> mais — do que nos últimos três anos. Isto não é um curso, é um sistema operacional para a mente."</p>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <span class="al-avatar" style="width:48px;height:48px;font-size:18px;"><span>BL</span></span>
+        <div style="display:flex;flex-direction:column;align-items:flex-start;"><span style="font-size:var(--font-size-base);font-weight:600;">Beatriz Lemos</span><span class="al-data" style="color:var(--muted-foreground);">MEMBRO DESDE 2024</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────── CTA FINAL ───────── -->
+  <section style="border-top:1px solid var(--hairline);">
+    <div style="max-width:1080px;margin:0 auto;padding:140px clamp(20px,5vw,32px);display:flex;flex-direction:column;align-items:center;text-align:center;gap:32px;">
+      <p class="al-eyebrow" style="color:var(--primary);">Sua jornada começa agora</p>
+      <h2 style="font-family:var(--font-display);font-weight:300;font-size:clamp(40px,6vw,72px);line-height:1;letter-spacing:-0.01em;margin:0;max-width:20ch;">Imortalize o seu <em>legado.</em></h2>
+      <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Button" size="lg" hint-size="auto,56px">Começar agora</x-import>
+    </div>
+  </section>
+
+  <!-- ───────── FOOTER ───────── -->
+  <footer style="border-top:1px solid var(--hairline);background:var(--card);">
+    <div style="max-width:1200px;margin:0 auto;padding:48px clamp(20px,5vw,32px);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;">
+      <span style="display:inline-flex;align-items:center;gap:10px;"><img src="assets/logo-gold.svg" alt="{{BOUND_DS_NAME}}" width="22" height="22" style="display:block;flex-shrink:0;"><span style="font-family:var(--font-display);font-size:var(--font-size-lg);">{{BOUND_DS_NAME}}</span></span>
+      <span class="al-data" style="color:var(--muted-foreground);">© 2026 {{BOUND_DS_NAME}} · SECURED BY AURORA</span>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;default&quot;:&quot;dark&quot;}}">
+class Component extends DCLogic {
+  renderVals() { return { themeClass: this.props.theme === 'light' ? 'light' : '' }; }
+}
+</script>
+</body>
+</html>

@@ -36,8 +36,8 @@ adequate, and there is no horizontal overflow: a required gate before any screen
    `env(safe-area-inset-*)` when needed.
 8. **Responsive media & performance**: Images have stable dimensions/aspect ratios; heavy media is
    lazy-loaded when appropriate; complex sections use progressive disclosure on mobile.
-9. **Repo-side preflight**: Outside Claude Design Web, when static files are available, run
-   `node scripts/detect-canvas-antipatterns.mjs <path>` to catch deterministic mobile risks such as
+9. **Repo-side preflight**: Outside Claude Design Web (plain Node, built-ins only, no npm), when static
+   files are available, run `node scripts/detect-canvas-antipatterns.mjs <path>` to catch deterministic mobile risks such as
    missing viewport meta, large fixed widths, `100vw` overflow traps, and viewport-based font sizing.
 
 ## Output contract

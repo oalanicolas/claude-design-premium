@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  {{DS_HELMET_BLOCK}}
+</helmet>
+
+<div style="min-height:100vh;background:var(--background);color:var(--foreground);font-family:var(--font-sans);padding:72px clamp(18px,5vw,32px) 112px;">
+  <div style="max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:72px;">
+
+    <!-- ===================== HERO ===================== -->
+    <header style="display:flex;flex-direction:column;gap:20px;">
+      <p class="al-eyebrow" style="color:var(--primary);">Harness · {{BOUND_DS_NAME}} · Guia Vivo</p>
+      <h1 style="font-family:var(--font-display);font-weight:300;font-size:var(--font-size-5xl);line-height:1.02;letter-spacing:-0.01em;margin:0;max-width:20ch;">Como extrair o máximo do <em>harness.</em></h1>
+      <p style="font-family:var(--font-serif);font-style:italic;color:var(--muted-foreground);font-size:var(--font-size-lg);max-width:60ch;margin:0;line-height:1.5;">Este arquivo é a referência do time: os prompts que você pode usar e uma galeria viva de todos os componentes do {{BOUND_DS_NAME}}. Duplique-o para começar qualquer entrega.</p>
+      <div style="display:flex;gap:28px;flex-wrap:wrap;margin-top:8px;">
+        <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.StatChip" label="Componentes" value="{{BOUND_DS_COMPONENT_COUNT}}" hint-size="auto,28px"></x-import>
+        <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.StatChip" label="Prompts prontos" value="12" tone="primary" hint-size="auto,28px"></x-import>
+        <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.StatChip" label="Tema" value="NOITE · DARK" hint-size="auto,28px"></x-import>
+      </div>
+    </header>
+
+    <!-- ===================== COMO FUNCIONA ===================== -->
+    <section style="display:flex;flex-direction:column;gap:28px;">
+      <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.SectionHeader" eyebrow="Antes de tudo" title="Como o harness funciona" hint-size="100%,72px"></x-import>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:1px;background:var(--hairline);border:1px solid var(--hairline);">
+        <div style="background:var(--background);padding:24px;display:flex;flex-direction:column;gap:8px;">
+          <span class="al-data" style="color:var(--primary);">01 · ROTEAMENTO</span>
+          <p style="margin:0;font-family:var(--font-serif);font-size:var(--font-size-lg);line-height:1.2;">Roteie pelo CLAUDE.md</p>
+          <p style="margin:0;font-size:var(--font-size-sm);color:var(--muted-foreground);line-height:1.5;">Toda tarefa cai na tabela de roteamento e carrega só as skills relevantes.</p>
+        </div>
+        <div style="background:var(--background);padding:24px;display:flex;flex-direction:column;gap:8px;">
+          <span class="al-data" style="color:var(--primary);">02 · RESTRIÇÃO</span>
+          <p style="margin:0;font-family:var(--font-serif);font-size:var(--font-size-lg);line-height:1.2;">Ancore no DESIGN.md</p>
+          <p style="margin:0;font-size:var(--font-size-sm);color:var(--muted-foreground);line-height:1.5;">Cada decisão sai dos tokens em <code style="font-family:var(--font-mono);font-size:0.85em;color:var(--foreground);">_ds/</code>. Nada é inventado.</p>
+        </div>
+        <div style="background:var(--background);padding:24px;display:flex;flex-direction:column;gap:8px;">
+          <span class="al-data" style="color:var(--primary);">03 · COMPOSIÇÃO</span>
+          <p style="margin:0;font-family:var(--font-serif);font-size:var(--font-size-lg);line-height:1.2;">Componha, não imite</p>
+          <p style="margin:0;font-size:var(--font-size-sm);color:var(--muted-foreground);line-height:1.5;">Carregue o bundle e use o namespace. Nunca restilize HTML cru para parecer um componente.</p>
+        </div>
+        <div style="background:var(--background);padding:24px;display:flex;flex-direction:column;gap:8px;">
+          <span class="al-data" style="color:var(--primary);">04 · TRANSPARÊNCIA</span>
+          <p style="margin:0;font-family:var(--font-serif);font-size:var(--font-size-lg);line-height:1.2;">Peça o bloco de report</p>
+          <p style="margin:0;font-size:var(--font-size-sm);color:var(--muted-foreground);line-height:1.5;">Entregas e auditorias terminam com SKILLS APPLIED / NOT APPLIED / NEXT.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PROMPTS ÚTEIS ===================== -->
+    <section style="display:flex;flex-direction:column;gap:28px;">
+      <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.SectionHeader" eyebrow="Para o time" title="Prompts Úteis" hint-size="100%,72px"></x-import>
+      <p style="margin:-8px 0 0;font-size:var(--font-size-base);color:var(--muted-foreground);max-width:64ch;line-height:1.6;">Cada prompt aciona uma skill do harness. Copie o texto, troque o que está entre <code style="font-family:var(--font-mono);font-size:0.85em;color:var(--foreground);">[colchetes]</code> e cole no chat. A maioria pede o bloco de report no final.</p>
+
+      <div style="display:flex;flex-direction:column;">
+        <sc-for list="{{ prompts }}" as="item" hint-placeholder-count="6">
+          <div style="border-top:1px solid var(--hairline);padding:30px 0;display:flex;flex-direction:column;gap:18px;">
+            <div style="display:flex;gap:16px;align-items:flex-start;">
+              <span style="flex-shrink:0;width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--hairline-strong);border-radius:var(--radius-base);"><i class="iconoir-sparks" aria-hidden="true" style="font-size:20px;color:var(--primary);"></i></span>
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;">
+                <span class="al-data" style="color:var(--primary);">{{ item.tag }}</span>
+                <p style="margin:0;font-family:var(--font-serif);font-size:var(--font-size-xl);line-height:1.1;">{{ item.title }}</p>
+                <p style="margin:0;font-size:var(--font-size-sm);color:var(--muted-foreground);line-height:1.5;">{{ item.desc }}</p>
+              </div>
+            </div>
+            <div class="al-md" style="--reading-size:15px;">
+              <pre data-lang="prompt" style="margin:0;"><button type="button" class="md-copy {{ item.okClass }}" onClick="{{ item.onCopy }}" style="min-height:32px;"><i class="iconoir-copy" aria-hidden="true" style="font-size:12px;"></i>{{ item.copyLabel }}</button><code style="white-space:pre-wrap;word-break:break-word;">{{ item.prompt }}</code></pre>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- ===================== BIBLIOTECA DE COMPONENTES ===================== -->
+    <section style="display:flex;flex-direction:column;gap:40px;">
+      <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.SectionHeader" eyebrow="Biblioteca de Componentes" title="Tudo já vem do bundle" hint-size="100%,72px"></x-import>
+
+      <!-- ----- NÚCLEO ----- -->
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div style="display:flex;align-items:center;gap:16px;"><span class="al-label" style="color:var(--primary);flex:none;">Núcleo</span><span style="flex:1;height:1px;background:var(--hairline);"></span></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:24px;">
+
+          <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Card" hint-size="100%,300px">
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardHeader" hint-size="100%,72px">
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardTitle" hint-size="auto,28px">Button</x-import>
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardDescription" hint-size="auto,24px">7 variantes, 3 tamanhos. Um CTA preenchido por tela.</x-import>
+            </x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardContent" hint-size="100%,160px">
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+                  <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Button" hint-size="auto,40px">Default</x-import>
+                  <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Button" variant="outline" hint-size="auto,40px">Outline</x-import>
+                  <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Button" variant="secondary" hint-size="auto,40px">Secondary</x-import>
+                  <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Button" variant="ghost" hint-size="auto,40px">Ghost</x-import>
+                  <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Button" variant="destructive" hint-size="auto,40px">Destructive</x-import>
+                  <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Button" variant="link" hint-size="auto,32px">link →</x-import>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+                  <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Button" size="sm" variant="outline" hint-size="auto,34px">sm</x-import>
+                  <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Button" size="lg" hint-size="auto,48px">lg</x-import>
+                  <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Button" size="icon" variant="outline" hint-size="40px,40px"><i class="iconoir-search" aria-hidden="true" style="font-size:16px;"></i></x-import>
+                </div>
+              </div>
+            </x-import>
+          </x-import>
+
+          <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Card" hint-size="100%,300px">
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardHeader" hint-size="100%,72px">
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardTitle" hint-size="auto,28px">Badge</x-import>
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardDescription" hint-size="auto,24px">Pill dourada para a marca; chips mono para estado.</x-import>
+            </x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardContent" hint-size="100%,120px">
+              <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+                <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Badge" variant="brand" hint-size="auto,24px">Curadoria Exclusiva</x-import>
+                <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Badge" variant="success" hint-size="auto,24px">Lido</x-import>
+                <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Badge" variant="warning" hint-size="auto,24px">Em pausa</x-import>
+                <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Badge" variant="info" hint-size="auto,24px">Novo</x-import>
+                <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Badge" variant="destructive" hint-size="auto,24px">Atrasado</x-import>
+              </div>
+            </x-import>
+          </x-import>
+
+          <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Card" hint-size="100%,300px">
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardHeader" hint-size="100%,72px">
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardTitle" hint-size="auto,28px">Icon</x-import>
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardDescription" hint-size="auto,24px">Iconoir por nome — nunca emoji, nunca SVG à mão.</x-import>
+            </x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardContent" hint-size="100%,140px">
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:center;color:var(--foreground);font-size:24px;">
+                  <i class="iconoir-book" aria-hidden="true"></i>
+                  <i class="iconoir-play" aria-hidden="true"></i>
+                  <i class="iconoir-group" aria-hidden="true"></i>
+                  <i class="iconoir-brain" aria-hidden="true"></i>
+                  <i class="iconoir-search" aria-hidden="true"></i>
+                  <i class="iconoir-settings" aria-hidden="true"></i>
+                  <i class="iconoir-star" aria-hidden="true" style="color:var(--primary);"></i>
+                  <i class="iconoir-arrow-left" aria-hidden="true"></i>
+                </div>
+                <p class="al-data" style="color:var(--muted-foreground);line-height:1.5;">VIA CLASSE ICONOIR-* — <span style="text-transform:none;letter-spacing:0;">name</span> É ATRIBUTO RESERVADO DO X-IMPORT</p>
+              </div>
+            </x-import>
+          </x-import>
+
+        </div>
+      </div>
+
+      <!-- ----- FORMULÁRIOS ----- -->
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div style="display:flex;align-items:center;gap:16px;"><span class="al-label" style="color:var(--primary);flex:none;">Formulários</span><span style="flex:1;height:1px;background:var(--hairline);"></span></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:24px;">
+
+          <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Card" hint-size="100%,300px">
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardHeader" hint-size="100%,72px">
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardTitle" hint-size="auto,28px">Input & Label</x-import>
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardDescription" hint-size="auto,24px">40px de altura, foco dourado, valor semibold.</x-import>
+            </x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardContent" hint-size="100%,120px">
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Label" hint-size="auto,18px">E-mail</x-import>
+                <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Input" type="email" placeholder="seu@email.com" hint-size="100%,40px"></x-import>
+              </div>
+            </x-import>
+          </x-import>
+
+          <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Card" hint-size="100%,300px">
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardHeader" hint-size="100%,72px">
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardTitle" hint-size="auto,28px">Textarea</x-import>
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardDescription" hint-size="auto,24px">Mesma receita do Input, multilinha.</x-import>
+            </x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardContent" hint-size="100%,120px">
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Textarea" placeholder="Escreva sua anotação…" rows="3" hint-size="100%,90px"></x-import>
+            </x-import>
+          </x-import>
+
+          <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Card" hint-size="100%,300px">
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardHeader" hint-size="100%,72px">
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardTitle" hint-size="auto,28px">Switch & Checkbox</x-import>
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardDescription" hint-size="auto,24px">Trilho/caixa viram ouro quando ativos.</x-import>
+            </x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardContent" hint-size="100%,120px">
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Switch" default-checked="{{ true }}" hint-size="44px,24px"></x-import>
+                  <span style="font-size:var(--font-size-sm);color:var(--muted-foreground);">Sequência de leitura diária</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Switch" hint-size="44px,24px"></x-import>
+                  <span style="font-size:var(--font-size-sm);color:var(--muted-foreground);">Notificações por e-mail</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Checkbox" default-checked="{{ true }}" hint-size="18px,18px"></x-import>
+                  <span style="font-size:var(--font-size-sm);color:var(--muted-foreground);">Lembrar de mim</span>
+                </div>
+              </div>
+            </x-import>
+          </x-import>
+
+        </div>
+      </div>
+
+      <!-- ----- DADOS & FEEDBACK ----- -->
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div style="display:flex;align-items:center;gap:16px;"><span class="al-label" style="color:var(--primary);flex:none;">Dados & Feedback</span><span style="flex:1;height:1px;background:var(--hairline);"></span></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:24px;">
+
+          <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Card" hint-size="100%,300px">
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardHeader" hint-size="100%,72px">
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardTitle" hint-size="auto,28px">Alert</x-import>
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardDescription" hint-size="auto,24px">Borda 25% + fundo 5% tingidos. Nunca grita.</x-import>
+            </x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardContent" hint-size="100%,180px">
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Alert" variant="success" hint-size="100%,44px">Link de acesso enviado.</x-import>
+                <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Alert" variant="error" hint-size="100%,44px">E-mail ou senha incorretos.</x-import>
+                <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Alert" variant="warning" hint-size="100%,44px">Sua assinatura expira em 3 dias.</x-import>
+                <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Alert" variant="info" hint-size="100%,44px">Novo módulo disponível na trilha.</x-import>
+              </div>
+            </x-import>
+          </x-import>
+
+          <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Card" hint-size="100%,300px">
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardHeader" hint-size="100%,72px">
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardTitle" hint-size="auto,28px">Avatar</x-import>
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardDescription" hint-size="auto,24px">Imagem ou iniciais; tamanhos sm → xl.</x-import>
+            </x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardContent" hint-size="100%,140px">
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;">
+                  <span class="al-avatar" style="width:32px;height:32px;font-size:12px;"><span>AN</span></span>
+                  <span class="al-avatar" style="width:40px;height:40px;font-size:15px;"><span>AS</span></span>
+                  <span class="al-avatar" style="width:56px;height:56px;font-size:21px;"><span>BL</span></span>
+                  <span class="al-avatar" style="width:80px;height:80px;font-size:30px;"><span>CR</span></span>
+                </div>
+                <p class="al-data" style="color:var(--muted-foreground);line-height:1.5;">VIA CLASSE AL-AVATAR — <span style="text-transform:none;letter-spacing:0;">name</span> É ATRIBUTO RESERVADO DO X-IMPORT</p>
+              </div>
+            </x-import>
+          </x-import>
+
+          <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Card" hint-size="100%,300px">
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardHeader" hint-size="100%,72px">
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardTitle" hint-size="auto,28px">Progress</x-import>
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardDescription" hint-size="auto,24px">Linha de 2px, ouro sobre ouro/18%.</x-import>
+            </x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardContent" hint-size="100%,140px">
+              <div style="display:flex;flex-direction:column;gap:16px;">
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                  <span class="al-data" style="color:var(--muted-foreground);">HÁBITOS ATÔMICOS · 64%</span>
+                  <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Progress" value="{{ 64 }}" hint-size="100%,8px"></x-import>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                  <span class="al-data" style="color:var(--muted-foreground);">TRILHA DE IA · 28%</span>
+                  <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Progress" value="{{ 28 }}" hint-size="100%,8px"></x-import>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px;">
+                  <span class="al-data" style="color:var(--muted-foreground);">ESSENCIALISMO · 100%</span>
+                  <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Progress" value="{{ 100 }}" hint-size="100%,8px"></x-import>
+                </div>
+              </div>
+            </x-import>
+          </x-import>
+
+          <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Card" hint-size="100%,300px">
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardHeader" hint-size="100%,72px">
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardTitle" hint-size="auto,28px">StatChip</x-import>
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardDescription" hint-size="auto,24px">Par label/valor — mono caps + serif. <code style="font-family:var(--font-mono);font-size:0.85em;">tone</code> colore o valor.</x-import>
+            </x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardContent" hint-size="100%,120px">
+              <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:center;">
+                <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.StatChip" label="Membros" value="3.847" hint-size="auto,28px"></x-import>
+                <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.StatChip" label="Sequência" value="12 DIAS" tone="primary" hint-size="auto,28px"></x-import>
+                <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.StatChip" label="Concluídos" value="48" tone="success" hint-size="auto,28px"></x-import>
+              </div>
+            </x-import>
+          </x-import>
+
+          <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Card" hint-size="100%,300px">
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardHeader" hint-size="100%,72px">
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardTitle" hint-size="auto,28px">Tabs</x-import>
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardDescription" hint-size="auto,24px">Sublinhado editorial, régua dourada no ativo.</x-import>
+            </x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardContent" hint-size="100%,140px">
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+                  <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Tabs" items="{{ tabItems }}" value="{{ activeTab }}" on-value-change="{{ setTab }}" hint-size="100%,44px"></x-import>
+                </div>
+                <p style="margin:0;font-family:var(--font-serif);font-style:italic;font-size:var(--font-size-base);color:var(--muted-foreground);line-height:1.5;min-height:48px;">{{ tabContent }}</p>
+              </div>
+            </x-import>
+          </x-import>
+
+          <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Card" hint-size="100%,300px">
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardHeader" hint-size="100%,72px">
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardTitle" hint-size="auto,28px">Card</x-import>
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardDescription" hint-size="auto,24px">A própria superfície: hairline, raio 4px, sem sombra.</x-import>
+            </x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardContent" hint-size="100%,80px">
+              <p style="margin:0;font-size:var(--font-size-sm);color:var(--muted-foreground);line-height:1.5;">Header · Title · Description · Content · Footer. Tudo o que você vê nesta galeria é um Card.</p>
+            </x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardFooter" hint-size="100%,56px">
+              <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Button" variant="outline" size="sm" hint-size="auto,34px">Ação no footer</x-import>
+            </x-import>
+          </x-import>
+
+        </div>
+      </div>
+
+      <!-- ----- MARCA ----- -->
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div style="display:flex;align-items:center;gap:16px;"><span class="al-label" style="color:var(--primary);flex:none;">Marca</span><span style="flex:1;height:1px;background:var(--hairline);"></span></div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <span class="al-data" style="color:var(--muted-foreground);">SECTIONHEADER</span>
+          <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.SectionHeader" eyebrow="Tendências" title="Mais Populares" hint-size="100%,72px"></x-import>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <span class="al-data" style="color:var(--muted-foreground);">BOOKCARD · capa levita no hover, sem aura</span>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr));gap:20px;">
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.BookCard" title="Hábitos Atômicos" author="James Clear" category="Produtividade" status="reading" hint-size="100%,320px"></x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.BookCard" title="Essencialismo" author="Greg McKeown" category="Foco" status="read" bookmarked="{{ true }}" hint-size="100%,320px"></x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.BookCard" title="A Coragem de Ser Imperfeito" author="Brené Brown" category="Psicologia" hint-size="100%,320px"></x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.BookCard" title="Sapiens" author="Yuval Noah Harari" category="História" status="read" hint-size="100%,320px"></x-import>
+          </div>
+        </div>
+      </div>
+
+      <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Alert" variant="success" hint-size="100%,56px">São 17 componentes no namespace — todos compostos do bundle, sem uma linha de HTML imitando-os. Duplique este arquivo para começar.</x-import>
+    </section>
+
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1040,&quot;height&quot;:1100}}">
+class Component extends DCLogic {
+  state = { activeTab: 'componentes', copiedKey: null };
+
+  componentWillUnmount() { clearTimeout(this._t); }
+
+  _fallbackCopy(text) {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.top = '0';
+      ta.style.left = '0';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    } catch (e) {}
+  }
+
+  _copy(key, text) {
+    // navigator.clipboard is often blocked inside preview iframes — always
+    // keep the execCommand fallback so the button actually copies.
+    let async = false;
+    try {
+      const p = navigator.clipboard && navigator.clipboard.writeText(text);
+      if (p && p.then) {
+        async = true;
+        p.catch(() => this._fallbackCopy(text));
+      }
+    } catch (e) {}
+    if (!async) this._fallbackCopy(text);
+    clearTimeout(this._t);
+    this.setState({ copiedKey: key });
+    this._t = setTimeout(() => this.setState({ copiedKey: null }), 1600);
+  }
+
+  renderVals() {
+    const tabContentMap = {
+      componentes: '21 componentes prontos no namespace — todos saídos do bundle.',
+      tokens: 'Cores, tipografia, espaçamento, raios e motion como var(--*) — fonte única em _ds/.',
+      padroes: 'App shell, topbar canônica, hero compacto e empty state — descritos no DESIGN.md §6.',
+    };
+
+    const defs = [
+      { key: 'novo', tag: '01 · NOVO ENTREGÁVEL', title: 'Começar uma nova tela, deck ou doc',
+        desc: 'O ponto de partida de qualquer entrega. Duplica este arquivo e mantém a composição do bundle.',
+        prompt: 'Duplique o Starter.dc.html como [Nome].dc.html e construa [o que você precisa]. Carregue o bundle do {{BOUND_DS_NAME}} no <helmet> (copie o bloco do Starter) e componha os componentes do namespace {{BOUND_DS_NAMESPACE}} — não recrie HTML cru imitando-os. Ancore cada decisão no DESIGN.md e nos tokens. Gere só a visão principal; eu refino antes de pedir mais. Reporte quais skills foram aplicadas.' },
+      { key: 'brief', tag: '02 · ENQUADRAR O BRIEF', title: 'Definir o brief antes de desenhar',
+        desc: 'Quando público, marca ou superfície ainda não estão claros. Evita inventar contexto.',
+        prompt: 'Rode brief-framing antes de gerar UI. Classifique a superfície como brand, product ou system. Liste o público, o trabalho-a-ser-feito principal, referências a seguir ou evitar, e as lacunas que travam a decisão. Pergunte só o que muda materialmente o design.' },
+      { key: 'orig', tag: '03 · ORIGINALIDADE', title: 'Checar clichês antes de polir',
+        desc: 'Pega reflexos genéricos de template e clichês de categoria antes que virem padrão.',
+        prompt: 'Rode visual-originality-audit nesta direção. Aponte reflexos genéricos de template, clichês de categoria e clichês de segunda ordem. Recomende mudanças pontuais que tornem o design mais autoral sem prejudicar a usabilidade.' },
+      { key: 'ds', tag: '04 · ANTI-DRIFT DO DS', title: 'Forçar o uso do {{BOUND_DS_NAME}}',
+        desc: 'A trava contra deriva: tudo sai dos tokens e dos componentes do namespace.',
+        prompt: 'Use o design system bound em tudo. Antes de gerar, leia BOUND_DS.json (ou _ds_manifest.json) e liste quais tokens (globalCssPaths) e quais componentes do namespace você vai aplicar nesta tela, conforme o DESIGN.md. Carregue o bundle e componha os componentes — nunca restilize HTML cru para imitá-los. Se algo não estiver coberto, pergunte em vez de inventar.' },
+      { key: 'ui', tag: '05 · AUDITORIA DE UI', title: 'Revisar hierarquia e composição',
+        desc: 'Crítica de UI sem redesenhar: o que funciona, os problemas com localização, e correções nos tokens.',
+        prompt: 'Rode ui-audit na saída anterior. Aponte o que funciona, os problemas específicos com sua localização, e correções amarradas aos tokens. Não redesenhe a tela.' },
+      { key: 'polish', tag: '06 · POLIMENTO', title: 'Refinar sem mudar a estrutura',
+        desc: 'O passe final de qualidade: microcopy, alinhamento, hierarquia e motion sutil.',
+        prompt: 'Rode polish-phase na tela aprovada. Refine microcopy, alinhamento, hierarquia de botões e adicione motion sutil usando os tokens de movimento. Mantenha a estrutura idêntica e liste exatamente o que mudou.' },
+      { key: 'texto', tag: '07 · INTEGRIDADE DE TEXTO', title: 'Auditar a copy em pt-BR',
+        desc: 'Voz de produto pt-BR: caça linguagem genérica, exagero e tipografia proibida.',
+        prompt: 'Rode text-integrity-audit neste texto. Aponte linguagem genérica, voz fraca, exagero, formas de frase repetidas, reflexo de recapitulação e tipografia proibida. Devolva o texto revisado e liste os problemas corrigidos.' },
+      { key: 'mobile', tag: '08 · REVISÃO MOBILE', title: 'Testar nos breakpoints',
+        desc: 'Comportamento responsivo de 320px a 1440px: overflow, alvos de toque, empilhamento.',
+        prompt: 'Rode mobile-first-audit em 320px, 375px, 430px, 768px, 1024px e 1440px. Reporte overflow, alvos de toque e problemas de empilhamento, depois diga aprovado ou os bloqueios.' },
+      { key: 'a11y', tag: '09 · ACESSIBILIDADE', title: 'Cobrir contraste, foco e teclado',
+        desc: 'Checagem de acessibilidade com o aviso explícito de não-certificação WCAG.',
+        prompt: 'Rode accessibility-audit nesta tela. Cubra contraste, semântica, teclado, foco, formulários, movimento e clareza para leitor de tela. Liste bloqueios com correções e inclua o aviso de não-certificação WCAG.' },
+      { key: 'fino', tag: '10 · AJUSTE FINO', title: 'Mexer em uma coisa só',
+        desc: 'Para um único retoque — sem regenerar a tela inteira (o caminho que mais causa deriva).',
+        prompt: 'Apenas ajustes pontuais, não reconstrua a tela: [ex.: aumentar o contraste do CTA, apertar o espaçamento do hero, trocar o peso do título]. Mantenha todo o resto idêntico.' },
+      { key: 'codigo', tag: '11 · REVISÃO DE CÓDIGO', title: 'Auditar a implementação (fora do canvas)',
+        desc: 'Quando já existe código/Tailwind: violações de token e valores arbitrários com linha.',
+        prompt: 'Aqui está a implementação. Rode design-system-guardian, depois tailwind-audit, mobile-first-audit e accessibility-audit. Liste violações de token e valores arbitrários com números de linha e as classes corrigidas. Não reescreva o arquivo inteiro.' },
+      { key: 'final', tag: '12 · APROVAÇÃO FINAL', title: 'Marcar uma tela como final',
+        desc: 'O portão de saída: roda guardian, polimento, mobile e acessibilidade antes de declarar final.',
+        prompt: 'Quero marcar esta tela como final. Aplique o roteamento de aprovação final: design-system-guardian, polish-phase, mobile-first-audit, accessibility-audit. Não declare final até mobile e acessibilidade terem rodado. Reporte o resultado.' },
+    ];
+
+    const prompts = defs.map(d => ({
+      ...d,
+      copyLabel: this.state.copiedKey === d.key ? 'Copiado' : 'Copiar',
+      okClass: this.state.copiedKey === d.key ? 'ok' : '',
+      onCopy: () => this._copy(d.key, d.prompt),
+    }));
+
+    return {
+      tabItems: [
+        { value: 'componentes', label: 'Componentes' },
+        { value: 'tokens', label: 'Tokens' },
+        { value: 'padroes', label: 'Padrões' },
+      ],
+      activeTab: this.state.activeTab,
+      setTab: (v) => this.setState({ activeTab: v }),
+      tabContent: tabContentMap[this.state.activeTab],
+      prompts,
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -29,7 +29,7 @@ defaulting to familiar SaaS, portfolio, dashboard, or landing-page templates.
 4. **Inspect repeated scaffold patterns**: Look for default hero + stats blocks, endless equal card grids,
    decorative gradient text, generic glass panels, overused tiny uppercase labels, arbitrary blobs,
    shallow dashboard chrome, or decorative motion with no job.
-   Outside Claude Design Web, when static files are available, use
+   Outside Claude Design Web (plain Node, built-ins only, no npm), when static files are available, use
    `node scripts/detect-canvas-antipatterns.mjs <path>` as a deterministic preflight for measurable
    code-level tells. Treat script findings as evidence, not as a full originality judgment.
 5. **Check brand/product fit**:

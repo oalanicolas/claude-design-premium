@@ -1,16 +1,16 @@
 # OS
 .DS_Store
 Thumbs.db
+.thumbnail
 
 # Editors
 .vscode/
 .idea/
 *.swp
 
-# Local working copies of the source-of-truth files
-# (the repo ships .example versions; your real ones are personal)
-/DESIGN.md
-/design-tokens.json
+# Generated at runtime (canvas auto-setup or bootstrap-harness.mjs)
+/BOUND_DS.json
+/ds-helmet.snippet.html
 
 # Logs / temp
 *.log

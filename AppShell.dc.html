@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  {{DS_HELMET_BLOCK}}
+</helmet>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     TEMPLATE · APP SHELL ({{BOUND_DS_NAME}})
+     Casca de produto: sidebar fixa 256px (nav primária) + topbar canônica.
+     Duplique como [Area].dc.html e troque o conteúdo do <main>.
+     Mantenha: a sidebar como única camada de nav, um CTA dourado por tela.
+     ════════════════════════════════════════════════════════════════════ -->
+
+<div class="{{ themeClass }}" style="min-height:100vh;display:flex;background:var(--background);color:var(--foreground);font-family:var(--font-sans);">
+
+  <!-- ───────────────────────── SIDEBAR (256px) ───────────────────────── -->
+  <aside style="width:256px;flex-shrink:0;background:var(--card);border-right:1px solid var(--hairline);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;">
+    <div style="padding:24px 22px;border-bottom:1px solid var(--hairline);">
+      <span style="display:inline-flex;align-items:center;gap:11px;">
+        <img src="assets/logo-gold.svg" alt="{{BOUND_DS_NAME}}" width="26" height="26" style="flex-shrink:0;display:block;">
+        <span style="font-family:var(--font-display);font-weight:400;font-size:var(--font-size-xl);letter-spacing:-0.01em;">{{BOUND_DS_NAME}}</span>
+      </span>
+    </div>
+
+    <nav style="flex:1;padding:16px 0;display:flex;flex-direction:column;gap:2px;overflow-y:auto;">
+      <sc-for list="{{ nav }}" as="item" hint-placeholder-count="5">
+        <a href="#" onClick="{{ item.onClick }}" style="{{ item.style }}">
+          <i class="iconoir-{{ item.icon }}" aria-hidden="true" style="font-size:18px;flex-shrink:0;"></i>
+          <span>{{ item.label }}</span>
+        </a>
+      </sc-for>
+    </nav>
+
+    <div style="padding:14px 16px;border-top:1px solid var(--hairline);display:flex;align-items:center;gap:11px;">
+      <span class="al-avatar" style="width:36px;height:36px;font-size:14px;flex-shrink:0;"><span>AN</span></span>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px;">
+        <span style="font-size:var(--font-size-sm);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Alan Nicolas</span>
+        <span class="al-data" style="color:var(--muted-foreground);">PLANO LENDÁRIO</span>
+      </div>
+      <i class="iconoir-settings" aria-hidden="true" style="font-size:18px;color:var(--muted-foreground);"></i>
+    </div>
+  </aside>
+
+  <!-- ───────────────────────── ÁREA DE CONTEÚDO ───────────────────────── -->
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column;">
+
+    <!-- TOPBAR canônica: wordmark + sufixo de área + busca + ações -->
+    <header style="height:64px;flex-shrink:0;border-bottom:1px solid var(--hairline);display:flex;align-items:center;gap:20px;padding:0 clamp(20px,4vw,40px);background:var(--background);position:sticky;top:0;z-index:10;">
+      <div style="display:flex;align-items:center;gap:14px;min-width:0;">
+        <span style="display:inline-flex;align-items:center;gap:9px;">
+          <img src="assets/logo-gold.svg" alt="{{BOUND_DS_NAME}}" width="20" height="20" style="flex-shrink:0;display:block;">
+          <span style="font-family:var(--font-display);font-size:var(--font-size-lg);white-space:nowrap;">{{BOUND_DS_NAME}}</span>
+        </span>
+        <span style="width:1px;height:20px;background:var(--hairline-strong);"></span>
+        <span class="al-data" style="color:var(--muted-foreground);">LIVROS</span>
+      </div>
+
+      <div style="flex:1;display:flex;justify-content:center;">
+        <button type="button" style="display:flex;align-items:center;gap:10px;width:min(420px,100%);height:38px;padding:0 14px;border:1px solid var(--hairline);border-radius:var(--radius-sm);background:transparent;color:var(--muted-foreground);font-family:var(--font-sans);font-size:var(--font-size-sm);cursor:pointer;" style-hover="border-color:var(--hairline-strong);">
+          <i class="iconoir-search" aria-hidden="true" style="font-size:16px;"></i>
+          <span style="flex:1;text-align:left;">Buscar livros, trilhas, mentes…</span>
+          <span class="al-data" style="border:1px solid var(--hairline);border-radius:var(--radius-xs);padding:2px 6px;">⌘K</span>
+        </button>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:14px;flex-shrink:0;">
+        <i class="iconoir-bell" aria-hidden="true" style="font-size:20px;color:var(--muted-foreground);cursor:pointer;"></i>
+        <span class="al-avatar" style="width:34px;height:34px;font-size:13px;"><span>AN</span></span>
+      </div>
+    </header>
+
+    <!-- MAIN — troque tudo daqui pra baixo na sua entrega -->
+    <main style="flex:1;overflow-y:auto;padding:48px clamp(20px,4vw,40px) 96px;">
+      <div style="max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:56px;">
+
+        <!-- HERO COMPACTO: uma banda, conteúdo acima da dobra -->
+        <section style="display:flex;align-items:flex-end;justify-content:space-between;gap:32px;flex-wrap:wrap;">
+          <div style="display:flex;flex-direction:column;gap:14px;max-width:46ch;">
+            <p class="al-eyebrow" style="color:var(--primary);">Sua biblioteca</p>
+            <h1 style="font-family:var(--font-display);font-weight:300;font-size:var(--font-size-5xl);line-height:1.02;letter-spacing:-0.01em;margin:0;">Bom te ver de volta, <em>Alan.</em></h1>
+            <p style="font-family:var(--font-serif);font-style:italic;color:var(--muted-foreground);font-size:var(--font-size-lg);margin:0;line-height:1.45;">Você parou na página 184 de Hábitos Atômicos.</p>
+          </div>
+          <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;">
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.StatChip" label="Sequência" value="12 DIAS" tone="primary" hint-size="auto,52px"></x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.StatChip" label="Concluídos" value="48" tone="success" hint-size="auto,52px"></x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Button" hint-size="auto,40px">Continuar Leitura</x-import>
+          </div>
+        </section>
+
+        <!-- CONTINUAR — card com progresso -->
+        <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Card" hint-size="100%,160px">
+          <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.CardContent" hint-size="100%,160px">
+            <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;padding-top:24px;">
+              <div style="width:64px;height:88px;border-radius:var(--radius-base);background:linear-gradient(150deg,#1a1a1a,#0e0e0e);border:1px solid var(--hairline);display:grid;place-items:center;flex-shrink:0;">
+                <i class="iconoir-book" aria-hidden="true" style="font-size:24px;color:var(--primary);"></i>
+              </div>
+              <div style="flex:1;min-width:200px;display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;">
+                  <span style="font-family:var(--font-serif);font-size:var(--font-size-xl);">Hábitos Atômicos</span>
+                  <span class="al-data" style="color:var(--primary);">64% · 12 MIN RESTANTES</span>
+                </div>
+                <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Progress" value="{{ 64 }}" hint-size="100%,8px"></x-import>
+              </div>
+            </div>
+          </x-import>
+        </x-import>
+
+        <!-- SEÇÃO: estante -->
+        <section style="display:flex;flex-direction:column;gap:28px;">
+          <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.SectionHeader" eyebrow="Continue de onde parou" title="Na sua estante" hint-size="100%,72px"></x-import>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(180px,100%),1fr));gap:28px;">
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.BookCard" title="Hábitos Atômicos" author="James Clear" category="Produtividade" status="reading" hint-size="100%,320px"></x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.BookCard" title="Essencialismo" author="Greg McKeown" category="Foco" status="read" bookmarked="{{ true }}" hint-size="100%,320px"></x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.BookCard" title="A Coragem de Ser Imperfeito" author="Brené Brown" category="Psicologia" hint-size="100%,320px"></x-import>
+            <x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.BookCard" title="Sapiens" author="Yuval Noah Harari" category="História" status="read" hint-size="100%,320px"></x-import>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:860},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;default&quot;:&quot;dark&quot;}}">
+class Component extends DCLogic {
+  state = { active: 'biblioteca' };
+
+  renderVals() {
+    const items = [
+      { id: 'biblioteca', label: 'Biblioteca', icon: 'book' },
+      { id: 'area-1',   label: '[Área]',   icon: 'graduation-cap' },
+      { id: 'comunidade', label: 'Comunidade', icon: 'group' },
+      { id: 'mentes',     label: 'Mentes Sintéticas', icon: 'brain' },
+      { id: 'colecoes',   label: 'Coleções',   icon: 'bookmark' },
+    ];
+
+    const base = 'display:flex;align-items:center;gap:13px;padding:11px 22px;font-size:var(--font-size-sm);text-decoration:none;transition:color var(--transition-fast),background var(--transition-fast);';
+    const idle = base + 'color:var(--muted-foreground);';
+    const on   = base + 'color:var(--primary);background:hsl(var(--primary-hsl) / 0.06);box-shadow:inset 2px 0 0 var(--primary);font-weight:600;';
+
+    const nav = items.map(it => ({
+      ...it,
+      style: this.state.active === it.id ? on : idle,
+      onClick: (e) => { e.preventDefault(); this.setState({ active: it.id }); },
+    }));
+
+    return { nav, themeClass: this.props.theme === 'light' ? 'light' : '' };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  {{DS_HELMET_BLOCK}}
+</helmet>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     TEMPLATE · DECK ({{BOUND_DS_NAME}} · Editorial, 1920×1080)
+     Slides = <section data-label> inline-styled dentro do deck-stage.
+     Duplique como [Nome].dc.html, troque o conteúdo dos slides.
+     Sistema: capa serif com 1 palavra em itálico-ouro · divisores com nº
+     grande · dados em mono · 1 hairline dourada por seção. Sem gradientes.
+     ════════════════════════════════════════════════════════════════════ -->
+
+<div class="{{ themeClass }}" style="display:contents;">
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+  <!-- ① CAPA -->
+  <section data-label="Capa" data-speaker-notes="Abertura. Diga o título e a promessa em uma frase." style="width:100%;height:100%;background:var(--background);color:var(--foreground);font-family:var(--font-sans);padding:120px 140px;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <span style="display:inline-flex;align-items:center;gap:12px;"><img src="assets/logo-gold.svg" alt="{{BOUND_DS_NAME}}" width="32" height="32" style="display:block;flex-shrink:0;"><span style="font-family:var(--font-display);font-size:32px;">{{BOUND_DS_NAME}}</span></span>
+      <span class="al-data" style="color:var(--muted-foreground);font-size:16px;">{{BOUND_DS_NAME}} · 2026</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:32px;max-width:24ch;">
+      <p class="al-eyebrow" style="color:var(--primary);font-size:18px;">Apresentação</p>
+      <h1 style="font-family:var(--font-display);font-weight:300;font-size:108px;line-height:0.98;letter-spacing:-0.02em;margin:0;">Expanda sua <em>Consciência.</em></h1>
+      <p style="font-family:var(--font-serif);font-style:italic;font-size:32px;color:var(--muted-foreground);margin:0;line-height:1.4;">Sabedoria secular potencializada por IA.</p>
+    </div>
+    <div style="width:100%;height:1px;background:linear-gradient(90deg,var(--hairline-strong),transparent);"></div>
+  </section>
+
+  <!-- ② AGENDA -->
+  <section data-label="Agenda" data-speaker-notes="Três blocos. Não leia tudo — sinalize o arco." style="width:100%;height:100%;background:var(--background);color:var(--foreground);font-family:var(--font-sans);padding:120px 140px;display:flex;flex-direction:column;gap:64px;box-sizing:border-box;justify-content:center;">
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <p class="al-eyebrow" style="color:var(--primary);font-size:18px;">O percurso</p>
+      <h2 style="font-family:var(--font-display);font-weight:300;font-size:72px;line-height:1;letter-spacing:-0.01em;margin:0;">Por onde vamos</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hairline);border:1px solid var(--hairline);">
+      <div style="background:var(--background);padding:48px 40px;display:flex;flex-direction:column;gap:18px;">
+        <span class="al-data" style="color:var(--primary);font-size:18px;">01</span>
+        <p style="font-family:var(--font-serif);font-size:38px;line-height:1.05;margin:0;">O problema</p>
+        <p style="font-size:22px;color:var(--muted-foreground);line-height:1.5;margin:0;">O que está quebrado hoje e por que importa.</p>
+      </div>
+      <div style="background:var(--background);padding:48px 40px;display:flex;flex-direction:column;gap:18px;">
+        <span class="al-data" style="color:var(--primary);font-size:18px;">02</span>
+        <p style="font-family:var(--font-serif);font-size:38px;line-height:1.05;margin:0;">A solução</p>
+        <p style="font-size:22px;color:var(--muted-foreground);line-height:1.5;margin:0;">A abordagem e por que ela funciona.</p>
+      </div>
+      <div style="background:var(--background);padding:48px 40px;display:flex;flex-direction:column;gap:18px;">
+        <span class="al-data" style="color:var(--primary);font-size:18px;">03</span>
+        <p style="font-family:var(--font-serif);font-size:38px;line-height:1.05;margin:0;">O impacto</p>
+        <p style="font-size:22px;color:var(--muted-foreground);line-height:1.5;margin:0;">Resultados, números e próximos passos.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ DIVISOR DE SEÇÃO -->
+  <section data-label="Seção" data-speaker-notes="Respiro. Anuncie a virada de capítulo." style="width:100%;height:100%;background:var(--background);color:var(--foreground);font-family:var(--font-sans);padding:140px;display:flex;flex-direction:column;justify-content:center;gap:24px;box-sizing:border-box;">
+    <span style="font-family:var(--font-display);font-weight:300;font-size:200px;line-height:0.8;color:var(--primary);">01</span>
+    <h2 style="font-family:var(--font-display);font-weight:300;font-size:88px;line-height:1;letter-spacing:-0.01em;margin:0;max-width:18ch;">O problema que <em>ninguém</em> resolveu.</h2>
+  </section>
+
+  <!-- ④ CONTEÚDO — dois blocos -->
+  <section data-label="Conteúdo" data-speaker-notes="Argumento principal à esquerda, evidência à direita." style="width:100%;height:100%;background:var(--background);color:var(--foreground);font-family:var(--font-sans);padding:120px 140px;display:grid;grid-template-columns:1.1fr 1fr;gap:96px;align-items:center;box-sizing:border-box;">
+    <div style="display:flex;flex-direction:column;gap:28px;">
+      <p class="al-eyebrow" style="color:var(--primary);font-size:18px;">A tese</p>
+      <h2 style="font-family:var(--font-display);font-weight:300;font-size:64px;line-height:1.02;letter-spacing:-0.01em;margin:0;">Conhecimento sem <em>aplicação</em> é entretenimento.</h2>
+      <p style="font-family:var(--font-serif);font-size:26px;color:var(--muted-foreground);line-height:1.5;margin:0;">A maioria dos cursos entrega informação. Nós entregamos transformação — medida em hábito, não em horas assistidas.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:20px;">
+      <div style="display:flex;gap:20px;align-items:flex-start;border-top:1px solid var(--hairline);padding-top:24px;">
+        <i class="iconoir-check-circle" aria-hidden="true" style="font-size:28px;color:var(--primary);flex-shrink:0;margin-top:4px;"></i>
+        <div style="display:flex;flex-direction:column;gap:6px;"><p style="font-family:var(--font-serif);font-size:28px;margin:0;">Trilhas guiadas por IA</p><p style="font-size:20px;color:var(--muted-foreground);margin:0;line-height:1.45;">Adaptadas ao seu ritmo e objetivo.</p></div>
+      </div>
+      <div style="display:flex;gap:20px;align-items:flex-start;border-top:1px solid var(--hairline);padding-top:24px;">
+        <i class="iconoir-check-circle" aria-hidden="true" style="font-size:28px;color:var(--primary);flex-shrink:0;margin-top:4px;"></i>
+        <div style="display:flex;flex-direction:column;gap:6px;"><p style="font-family:var(--font-serif);font-size:28px;margin:0;">Mentes sintéticas</p><p style="font-size:20px;color:var(--muted-foreground);margin:0;line-height:1.45;">Clones cognitivos de grandes pensadores.</p></div>
+      </div>
+      <div style="display:flex;gap:20px;align-items:flex-start;border-top:1px solid var(--hairline);padding-top:24px;">
+        <i class="iconoir-check-circle" aria-hidden="true" style="font-size:28px;color:var(--primary);flex-shrink:0;margin-top:4px;"></i>
+        <div style="display:flex;flex-direction:column;gap:6px;"><p style="font-family:var(--font-serif);font-size:28px;margin:0;">Comunidade lendária</p><p style="font-size:20px;color:var(--muted-foreground);margin:0;line-height:1.45;">Quem aplica junto, permanece.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑤ DADOS -->
+  <section data-label="Números" data-speaker-notes="Deixe os números falarem. Pause em cada um." style="width:100%;height:100%;background:var(--background);color:var(--foreground);font-family:var(--font-sans);padding:120px 140px;display:flex;flex-direction:column;gap:72px;justify-content:center;box-sizing:border-box;">
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <p class="al-eyebrow" style="color:var(--primary);font-size:18px;">A tração</p>
+      <h2 style="font-family:var(--font-display);font-weight:300;font-size:72px;line-height:1;letter-spacing:-0.01em;margin:0;">Em <em>números</em>.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:64px;">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <span style="font-family:var(--font-display);font-weight:300;font-size:96px;line-height:0.9;color:var(--primary);">3.847</span>
+        <span class="al-data" style="color:var(--muted-foreground);font-size:16px;">MEMBROS ATIVOS</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <span style="font-family:var(--font-display);font-weight:300;font-size:96px;line-height:0.9;color:var(--foreground);">94<span style="font-size:48px;color:var(--primary);">%</span></span>
+        <span class="al-data" style="color:var(--muted-foreground);font-size:16px;">CONCLUEM A 1ª TRILHA</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <span style="font-family:var(--font-display);font-weight:300;font-size:96px;line-height:0.9;color:var(--foreground);">12<span style="font-size:48px;color:var(--primary);">d</span></span>
+        <span class="al-data" style="color:var(--muted-foreground);font-size:16px;">SEQUÊNCIA MÉDIA DE LEITURA</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑥ ENCERRAMENTO -->
+  <section data-label="Encerramento" data-speaker-notes="Chamada para ação. Uma frase, um convite." style="width:100%;height:100%;background:var(--background);color:var(--foreground);font-family:var(--font-sans);padding:140px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:48px;text-align:center;box-sizing:border-box;">
+    <p class="al-eyebrow" style="color:var(--primary);font-size:18px;">Comece hoje</p>
+    <h2 style="font-family:var(--font-display);font-weight:300;font-size:96px;line-height:1;letter-spacing:-0.01em;margin:0;max-width:20ch;">Imortalize o seu <em>legado.</em></h2>
+    <div style="margin-top:8px;"><x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.Button" size="lg" hint-size="auto,56px">Começar agora</x-import></div>
+    <span style="display:inline-flex;align-items:center;gap:11px;position:absolute;bottom:80px;"><img src="assets/logo-gold.svg" alt="{{BOUND_DS_NAME}}" width="28" height="28" style="display:block;flex-shrink:0;"><span style="font-family:var(--font-display);font-size:28px;">{{BOUND_DS_NAME}}</span></span>
+  </section>
+
+</x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;default&quot;:&quot;dark&quot;}}">
+class Component extends DCLogic {
+  renderVals() { return { themeClass: this.props.theme === 'light' ? 'light' : '' }; }
+}
+</script>
+</body>
+</html>

@@ -43,8 +43,8 @@ syntax, and plain punctuation before it is treated as final.
    verbs, vague benefit claims, cute empty states, and buttons that do not describe the action.
 9. **Documentation pass**: Keep claims procedural and evidence-scoped. Do not promise determinism,
    compliance, production readiness, performance, or native behavior without a validation path.
-10. **Repo-side preflight**: Outside Claude Design Web, when files are available, run
-    `node scripts/detect-text-antipatterns.mjs <path>` for deterministic P1 checks and P2 review
+10. **Repo-side preflight**: Outside Claude Design Web (plain Node, built-ins only, no npm), when files
+    are available, run `node scripts/detect-text-antipatterns.mjs <path>` for deterministic P1 checks and P2 review
     notes. Use `--strict` only when you want P2 findings to fail local preflight. Do not claim Claude
     Design Web ran this script.
 

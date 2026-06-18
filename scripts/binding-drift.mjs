@@ -44,8 +44,6 @@ export function bindingDrifted(cached, detected) {
     'bindingSource',
     'bundle',
     'manifest',
-    'introDc',
-    'docLanguage',
   ];
 
   for (const key of scalarFields) {

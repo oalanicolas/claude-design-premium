@@ -156,7 +156,7 @@ function verifyPostBootstrap(binding) {
   }
   const introRel = binding.introDc;
   if (!introRel || !fs.existsSync(path.join(root, introRel))) {
-    throw new Error('Intro DC missing after bootstrap.');
+    throw new Error('Design-system DC missing after bootstrap.');
   }
   const text = fs.readFileSync(path.join(root, introRel), 'utf8');
   if (text.includes('{{BOUND_DS') || text.includes('{{DS_HELMET_BLOCK}}') || text.includes('{{INTRO_')) {
@@ -228,7 +228,7 @@ function main() {
 
   if (!needsWork) {
     process.stdout.write(`No-op: harness already bound to ${bound.name}.\n`);
-    process.exit(2);
+    process.exit(0);
   }
 
   if (dryRun) {
@@ -280,7 +280,7 @@ function main() {
           `  voice: ${voice.tagline.slice(0, 60)}${voice.tagline.length > 60 ? '…' : ''}`,
           `  wrote: BOUND_DS.json, styles.css, ds-helmet.snippet.html, DESIGN.md, ${bound.introDc}`,
           removed.length ? `  removed legacy DCs: ${removed.join(', ')}` : '',
-          `  personalized intro: ${personalized ? 'yes' : 'no'}`,
+          `  personalize-dc seam: ${personalized ? 'applied' : 'no-op'}`,
           warning ? `  note: ${warning}` : '',
           '  reset: node scripts/unbind-harness.mjs',
         ]

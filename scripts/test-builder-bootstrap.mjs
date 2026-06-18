@@ -61,7 +61,7 @@ function main() {
       throw new Error(`expected root ".", got ${bound.root}`);
     }
     if (!bound.introDc || !fs.existsSync(path.join(tmp, bound.introDc))) {
-      throw new Error(`intro DC missing: ${bound.introDc}`);
+      throw new Error(`design-system DC missing: ${bound.introDc}`);
     }
 
     const design = fs.readFileSync(path.join(tmp, 'DESIGN.md'), 'utf8');

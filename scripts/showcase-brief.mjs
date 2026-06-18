@@ -108,7 +108,7 @@ export function buildShowcaseBrief(binding, voice = {}, cwd = process.cwd()) {
     },
     inventory: {
       components,
-      tokens: pickTokens(binding.tokens ?? manifest?.tokens, 60),
+      tokens: pickTokens(manifest?.tokens, 60),
       cards: binding.cardMeta ?? manifest?.cards ?? [],
       startingPoints: binding.startingPoints ?? manifest?.startingPoints ?? [],
       brandFonts: binding.brandFonts ?? manifest?.brandFonts ?? [],
@@ -135,10 +135,7 @@ export function buildShowcaseBrief(binding, voice = {}, cwd = process.cwd()) {
         'Use var(--*) tokens from bound CSS; do not invent hex values.',
         'After assembly, delete the CDP:SHOWCASE:PENDING block entirely.',
       ],
-      references: [
-        'Forja-style: identity → fundamentals → component catalog with nav rail',
-        'AIOX-style: exhaustive per-component anchors and tier grouping',
-      ],
+
     },
   };
 }

@@ -55,7 +55,7 @@ persist `selectedBundle`, note alternates  -  do not block on silence.
 
 Read from `binding.root` (`.` or `_ds/<bundle>/`):
 
-1. `_ds_manifest.json`  -  `namespace`, `globalCssPaths`, `components`, `cards`, `templates`
+1. `_ds_manifest.json`  -  `namespace`, `globalCssPaths`, `components`, `cards` (specimens)
 2. `readme.md` / `README.md`  -  brand, voice, philosophy, anti-patterns
 3. Token CSS from `globalCssPaths` (paths relative to `binding.root`)
 4. `_ds_bundle.js`  -  chrome selectors, icon library hints
@@ -80,11 +80,10 @@ Build binding object (mirror script output):
 ### Phase 3  -  Write binding artifacts
 
 **Write `BOUND_DS.json`** with the binding object above plus `version: 2` (binding cache format), `configured: true`, and a
-`voice` object (tagline, heroHeadline, heroSubhead, badge, ctaPrimary, ctaSecondary, themeLabel,
-surfaces, areaSuffix, searchPlaceholder, logoPath, footerNote, docTitle, docLead, deckCoverHeadline,
-deckCoverSubhead, welcomeEyebrow, welcomeHeadline, welcomeSubhead, closingEyebrow, closingHeadline).
-Derive `voice` from DS readme + token CSS + manifest  -  mirror `scripts/extract-ds-voice.mjs` and
-`scripts/extract-ds-tokens.mjs` logic.
+slim `voice` object: `language`, `themeDefault`, `themeLabel`, `tagline`, `productDescription`,
+`surfaces`, `badge`, `logoPath`. Do **not** embed the full manifest token array in the binding cache
+(use `tokenCount` + read manifest/CSS on demand). Derive `voice` from DS readme + token CSS  -  mirror
+`scripts/extract-ds-voice.mjs` and `scripts/extract-ds-tokens.mjs` logic.
 
 **Write `styles.css`**  -  header comment + one `@import` per `globalCssPaths` entry:
 
@@ -106,7 +105,7 @@ Derive `voice` from DS readme + token CSS + manifest  -  mirror `scripts/extract
 ### Phase 4  -  Materialize design-system DC (scaffold only)
 
 Materialize **one** page from `scripts/templates/intro.dc.html` (not surface templates).
-**JS writes scaffold + brief only** — the active model assembles the full vitrine in Phase 4b.
+**JS writes scaffold + brief only** - the active model assembles the full vitrine in Phase 4d.
 
 1. Detect document language from `CLAUDE.md`, README, `DESIGN.md`, and DS readme
    (`scripts/intro-dc.mjs` -> `detectDocLanguage`).
@@ -114,49 +113,31 @@ Materialize **one** page from `scripts/templates/intro.dc.html` (not surface tem
 3. Remove legacy surface DCs if present (`Landing`, `AppShell`, `Deck`, `Doc`, `Starter`).
 4. Write `docLanguage` and `introDc` on `BOUND_DS.json`.
 
-For the intro DC, apply **technical binding** then **voice + gallery personalization**:
+For the design-system DC scaffold, mirror `scripts/intro-dc.mjs` materialization:
 
-**4a  -  Technical binding**
+**4a  -  Technical + intro copy**
 
 1. Replace `{{DS_HELMET_BLOCK}}` with the helmet inner content from Phase 3 (indented).
-2. Replace all `{{BOUND_DS_ROOT}}`, `{{BOUND_DS_NAMESPACE}}`, `{{BOUND_DS_NAME}}`,
-   `{{BOUND_DS_COMPONENT_COUNT}}` with binding values.
+2. Replace `{{INTRO_HTML_LANG}}`, `{{INTRO_PAGE_TITLE}}`, `{{INTRO_SYSTEM_HTML}}` via `introCopy()`.
+3. Replace `{{BOUND_DS_NAMESPACE}}` in scaffold x-import paths.
+4. Inject prompt markup at `<!-- CDP:PROMPTS -->` and localized `DCLogic` at `<!-- CDP:INTRO-SCRIPT -->`.
+5. **Do not assemble the component showcase here.** Keep `<!-- CDP:SHOWCASE:PENDING -->` for Phase 4d.
 
-**4b  -  Communication placeholders** (from `voice` / readme)
+**4b  -  personalize-dc seam**
 
-Replace every voice placeholder with project-specific copy:
+Mirror `scripts/personalize-dc.mjs` (no-op today). Report in `SCRIPTS APPLIED`; do not reintroduce
+legacy `{{BOUND_DS_*}}` voice placeholders or `CDP:REQUIRES` pruning.
 
-| Placeholder | Source |
-|---|---|
-| `{{BOUND_DS_BADGE}}` | Short tagline chip from readme |
-| `{{BOUND_DS_HERO_HEADLINE}}` | Hero title with one `<em>` accent word |
-| `{{BOUND_DS_HERO_SUBHEAD}}` | Product description in brand voice |
-| `{{BOUND_DS_CTA_PRIMARY}}` / `{{BOUND_DS_CTA_SECONDARY}}` | CTAs from readme voice |
-| `{{BOUND_DS_THEME_LABEL}}` | `NOITE · DARK` or `DIA · LIGHT` from readme default theme |
-| `{{INTRO_*}}` | Localized intro copy (`scripts/intro-dc.mjs`) |
-| `{{BOUND_DS_LOGO_PATH}}` | Logo from DS assets or `assets/logo-gold.svg` |
-| `{{BOUND_DS_FOOTER_NOTE}}` | Footer line (© + optional Secured by) |
-
-**4c  -  DS-aware structure** (mirror `scripts/personalize-dc.mjs`)
-
-1. Inject localized prompt script at `<!-- CDP:INTRO-SCRIPT -->`.
-2. **Remove** blocks wrapped in `<!-- CDP:REQUIRES:ComponentName -->` when that component is
-   **not** in `components`.
-3. **Prune** intro gallery cards whose `CardTitle` names a component missing from manifest.
-4. Set `theme.default` in the intro script props to `voice.themeDefault`.
-
-Never leave demo copy from a previous binding when the bound DS is a different product.
-
-**4d  -  Write showcase brief**
+**4c  -  Write showcase brief**
 
 Mirror `scripts/showcase-brief.mjs`: write `.cdp/showcase-brief.json` with manifest inventory,
 voice, and assembly contract. Set `showcaseAssembled: false` on `BOUND_DS.json`.
 
-### Phase 4b  -  Model assembles showcase (mandatory before UI deliverables)
+### Phase 4d  -  Model assembles showcase (mandatory before UI deliverables)
 
 If `design-system.dc.html` contains `<!-- CDP:SHOWCASE:PENDING -->`, read
 `skills/assemble-design-system-showcase.skill.md` and **assemble the full vitrine** in the same
-session. This step is for the active model (Opus/Sonnet/etc.) — not deterministic JS.
+session. This step is for the active model (Opus/Sonnet/etc.) - not deterministic JS.
 
 ### Phase 5  -  Synthesize `DESIGN.md`
 
@@ -196,7 +177,7 @@ After setup, output:
 - Namespace: [namespace]
 - Components: [count]  -  [comma-separated list]
 - Files written: BOUND_DS.json, styles.css, ds-helmet.snippet.html, DESIGN.md
-- Intro DC: [introDc filename] ([docLanguage])
+- Design-system DC: [introDc filename] ([docLanguage], showcaseAssembled: [true/false])
 - DESIGN.md: synthesized from [readme? tokens? cards?]
 - Blockers: [none | list]
 

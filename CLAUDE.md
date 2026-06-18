@@ -41,8 +41,8 @@ Follow [`docs/script-pipeline.md`](docs/script-pipeline.md) steps 0 - 4 in order
 1. **`context-signals.mjs`**  -  inventory health; confirm `needsAutoSetup`
 2. **`detect-bound-ds.mjs`** - resolve binding (`builder` root or `consumer` `_ds/<bundle>/`)
 3. **`extract-ds-voice.mjs`**  -  derive communication/voice from DS readme
-4. **`bootstrap-harness.mjs`**  -  write `BOUND_DS.json`, `styles.css`, `ds-helmet.snippet.html`; patch technical placeholders in `*.dc.html`
-5. **`personalize-dc.mjs`**  -  voice placeholders, surfaces/nav, component pruning in all DCs
+4. **`bootstrap-harness.mjs`**  -  write `BOUND_DS.json`, `styles.css`, `ds-helmet.snippet.html`; materialize design-system DC scaffold + `.cdp/showcase-brief.json`
+5. **`personalize-dc.mjs`**  -  bootstrap seam (no-op today; scaffold is fully written in step 4)
 6. **Synthesize** full `DESIGN.md` (skill Phase 5)
 7. **Report** `HARNESS AUTO-SETUP` + `SCRIPTS APPLIED`, then answer the user's message
 
@@ -80,7 +80,8 @@ Auto-setup detects `hostMode` (`builder` | `consumer`) and writes the same artif
 - **Host DS** (not shipped with the harness):
   - **Builder:** `_ds_manifest.json`, `_ds_bundle.js`, token CSS at project root (`hostMode: builder`).
   - **Consumer:** same files under `_ds/<bundle>/` (`hostMode: consumer`).
-- `BOUND_DS.json`: **generated cache** from bootstrap (`hostMode`, `bindingSource`, component inventory).
+- `BOUND_DS.json`: **generated cache** from bootstrap (`hostMode`, `bindingSource`, component inventory,
+  `tokenCount`, slim `voice`). Full token values stay in manifest/CSS - not duplicated in the binding cache.
   If missing, run auto-setup or read manifest from the detected host path.
 - `DESIGN.md`: visual identity, layout principles, and aesthetic constraints - the *interpretive*
   layer for the bound DS. When it disagrees with token CSS, the CSS wins - flag the mismatch.
@@ -91,7 +92,7 @@ Auto-setup detects `hostMode` (`builder` | `consumer`) and writes the same artif
   use `{{DS_HELMET_BLOCK}}` in DC templates or build from `_ds_manifest.json` -> `globalCssPaths`.
 - **Design-system DC** (`design-system.dc.html`): bootstrap writes **scaffold +** `.cdp/showcase-brief.json`
   from `scripts/templates/intro.dc.html`. The **active model** assembles the full customized vitrine
-  (`skills/assemble-design-system-showcase.skill.md`) — JS binds helmet/metrics/prompts; the model composes
+  (`skills/assemble-design-system-showcase.skill.md`) - JS binds helmet/metrics/prompts; the model composes
   tokens, specimens, and every component in product voice. Copy its `<helmet>` block when starting deliverables.
 - `skills/*.skill.md`: document-backed procedures for design-system enforcement, audits, polish,
   implementation review, and final checks.
@@ -124,7 +125,8 @@ See [`docs/script-pipeline.md`](docs/script-pipeline.md). **In the canvas:** rea
 `node scripts/<name>.mjs` for identical output.
 
 ```text
-context-signals -> detect-bound-ds -> extract-ds-voice -> bootstrap-harness -> personalize-dc
+context-signals -> detect-bound-ds -> extract-ds-voice -> bootstrap-harness -> personalize-dc (seam)
+  -> [model: assemble-design-system-showcase when pending]
   -> check_design_system -> design-system-guardian -> audits (+ detect-* scripts)
 ```
 
@@ -208,49 +210,36 @@ replicate its real files instead of recreating code from memory.
    `node scripts/synthesize-design-md.mjs` outside the canvas. Do not block UI work for a single
    interpretive sentence; block only when tokens are missing or invented.
 
-## Placeholder inventory (intro DC)
+## Placeholder inventory (design-system DC)
 
-Technical binding placeholders (replaced in Phase 3/4a of auto-setup):
+Replaced during bootstrap materialization (`scripts/intro-dc.mjs` + `scripts/bootstrap-harness.mjs`):
 
 | Placeholder | Source |
 |---|---|
 | `{{DS_HELMET_BLOCK}}` | Generated helmet: CSS links + bundle script + chrome suppress |
-| `{{BOUND_DS_ROOT}}` | `BOUND_DS.json` -> `root` |
-| `{{BOUND_DS_NAMESPACE}}` | `BOUND_DS.json` -> `namespace` |
-| `{{BOUND_DS_NAME}}` | Human DS name |
-| `{{BOUND_DS_COMPONENT_COUNT}}` | Component inventory length |
+| `{{BOUND_DS_NAMESPACE}}` | `BOUND_DS.json` -> `namespace` (in scaffold x-import paths) |
+| `{{INTRO_HTML_LANG}}` | Detected doc language |
+| `{{INTRO_PAGE_TITLE}}` | Localized page title |
+| `{{INTRO_SYSTEM_HTML}}` | Scaffold HTML from `renderShowcaseScaffold()` |
 
-Voice placeholders (replaced in Phase 4b; see `scripts/extract-ds-voice.mjs`):
-
-| Placeholder | Typical source |
-|---|---|
-| `{{BOUND_DS_BADGE}}` | Readme tagline chip |
-| `{{BOUND_DS_HERO_HEADLINE}}` | Hero with one `<em>` accent |
-| `{{BOUND_DS_HERO_SUBHEAD}}` | Product description |
-| `{{BOUND_DS_CTA_PRIMARY}}` / `{{BOUND_DS_CTA_SECONDARY}}` | Readme CTAs |
-| `{{BOUND_DS_THEME_LABEL}}` | `NOITE · DARK` or `DIA · LIGHT` |
-| `{{INTRO_*}}` | Localized intro copy (`scripts/intro-dc.mjs`) |
-| `{{BOUND_DS_LOGO_PATH}}` | DS assets path |
-| `{{BOUND_DS_FOOTER_NOTE}}` | Footer line |
+Voice for copy lives in `BOUND_DS.json` -> `voice` (slim: tagline, productDescription, surfaces,
+theme, logoPath, badge) and in `.cdp/showcase-brief.json` for showcase assembly.
 
 ## Structure markers (DC blocks)
 
-Processed by `scripts/personalize-dc.mjs` (canvas: mirror in Phase 4c):
-
 | Marker | File | Behavior |
 |---|---|---|
-| `<!-- CDP:REQUIRES:ComponentName -->` | intro DC | Block removed if component not in manifest |
-| `<!-- CDP:GALLERY:ComponentName -->` | intro DC | Gallery card pruned if component missing |
-| `<!-- CDP:INTRO-SCRIPT -->` | intro DC | Replaced with localized prompt script |
+| `<!-- CDP:INTRO-SCRIPT -->` | design-system DC | Replaced with localized prompt `DCLogic` script |
+| `<!-- CDP:PROMPTS -->` | design-system DC scaffold | Injected prompt list markup |
+| `<!-- CDP:SHOWCASE:PENDING -->` | design-system DC scaffold | Replaced by the active model (`assemble-design-system-showcase`), not JS |
 
-Do not hand-edit markers expecting them to persist across re-setup; edit readme/surfaces or the
-generator logic instead.
+Do not hand-edit markers expecting them to persist across re-setup; edit readme or generator logic instead.
 
 ## Building in this project
 
 Every deliverable is a **Design Component** (`Name.dc.html`). To use the bound DS, load its bundle
 once at the top of the template, then mount components from the namespace. Copy the `<helmet>` block
-from the intro DC (`BOUND_DS.json` -> `introDc`) or `ds-helmet.snippet.html`:
+from `design-system.dc.html` (`BOUND_DS.json` -> `introDc`) or `ds-helmet.snippet.html`:
 
     <helmet>
       <!-- CSS paths from BOUND_DS.json -> globalCssPaths -->
@@ -269,8 +258,8 @@ Read `BOUND_DS.json` -> `components` for the full component inventory. Read the 
 
 **Gotcha:** `x-import` treats `name` as a reserved attribute (it aliases the export name), so it is
 NOT forwarded as a prop. Components that take a `name` prop (e.g. `Icon`, `Avatar`) cannot receive
-`name` through `x-import`. Render those via DS output classes instead (see the intro DC gallery for the
-pattern used with this DS). Every other component is fine through `x-import`.
+`name` through `x-import`. For those cases, read the assembled `design-system.dc.html` specimen and
+mirror the DS-safe pattern used there. Every other component is fine through `x-import`.
 
 ## Skill inventory
 
@@ -283,6 +272,8 @@ pattern used with this DS). Every other component is fine through `x-import`.
 - `polish-phase`: microcopy, alignment, subtle motion, and perceived premium quality.
 - `text-integrity-audit`: checks UI copy, docs, prompts, reports, and public text for generic wording,
   weak voice, and banned typography.
+- `fivu-identity-showcase`: condenses FIVU voice/corpus/system-prompt work into one procedure for
+  premium identity pages and FIVU-grade design-system showcases.
 - `mobile-first-audit`: responsive behavior, breakpoints, and touch targets.
 - `accessibility-audit`: contrast, semantics, keyboard, focus, and reduced motion.
 
@@ -300,12 +291,13 @@ already in working context unless you have read them in the current task.
 | Trigger | Read before acting | Required behavior |
 |---|---|---|
 | **Start of session / before major work** | `scripts/context-signals.mjs`, `docs/script-pipeline.md` | Execute context-signals logic; report `SCRIPTS APPLIED`. If `needsAutoSetup`, continue to harness-auto-setup. If `needsShowcaseAssembly`, run assemble-design-system-showcase **before** other UI work. |
-| **Showcase pending** (`CDP:SHOWCASE:PENDING`, `needsShowcaseAssembly`) | `.cdp/showcase-brief.json`, `BOUND_DS.json`, `DESIGN.md`, DS readme, `skills/assemble-design-system-showcase.skill.md` | Model assembles the full `design-system.dc.html` vitrine — customized per product. JS does not replace this step. |
+| **Showcase pending** (`CDP:SHOWCASE:PENDING`, `needsShowcaseAssembly`) | `.cdp/showcase-brief.json`, `BOUND_DS.json`, `DESIGN.md`, DS readme, `skills/assemble-design-system-showcase.skill.md`, `skills/fivu-identity-showcase.skill.md` | Model assembles the full `design-system.dc.html` vitrine - customized per product. For premium narrative/showcase pages, use the FIVU architecture so the result is a worked identity system, not a generic component catalog. JS does not replace this step. |
+| FIVU, identidade verbal, voice system, corpus, system prompt de voz, página como a referência FIVU | `skills/fivu-identity-showcase.skill.md`, `BOUND_DS.json` when present, `DESIGN.md`, DS readme, supplied corpus/reference files | Use the single FIVU skill to synthesize voice, tone, corpus evidence, examples, anti-vocabulary, artifacts, and validation into one premium `.dc.html` page or identity spec. Do not split into multiple agents or generate the final page by JS. |
 | **Any message when harness is unconfigured** (`GO`, greeting, anything) | `docs/script-pipeline.md`, `skills/harness-auto-setup.skill.md`, `scripts/detect-bound-ds.mjs`, `scripts/extract-ds-voice.mjs`, `scripts/bootstrap-harness.mjs`, `scripts/personalize-dc.mjs` | Run full script pipeline steps 0 - 4 **before** anything else; write all artifacts; synthesize DESIGN.md; report `HARNESS AUTO-SETUP` + `SCRIPTS APPLIED`. |
 | Bootstrap validation explicitly requested | `CLAUDE.md`, `scripts/context-signals.mjs` | Include `CDP-CLAUDE-OK` once; execute context-signals; state whether routing + script pipeline appear loaded. |
 | New project, unclear audience/brand/first surface, or reference files without instructions | `skills/brief-framing.skill.md`, `BOUND_DS.json`, `DESIGN.md` | Classify the surface and ask only blocking questions before visual generation. |
 | Any UI generation, modification, or review | `BOUND_DS.json`, `DESIGN.md`, bound DS token CSS, `scripts/context-signals.mjs`, `skills/design-system-guardian.skill.md` | Run context-signals if not run this session; anchor in DESIGN.md + tokens; run `check_design_system` when available. |
-| Starting a new deliverable (screen, deck, doc, prototype) | intro DC (`BOUND_DS.json` -> `introDc`), `ds-helmet.snippet.html`, `DESIGN.md` | Create a new `Name.dc.html`; copy the `<helmet>` block from the intro page or snippet. |
+| Starting a new deliverable (screen, deck, doc, prototype) | `design-system.dc.html` (`BOUND_DS.json` -> `introDc`), `ds-helmet.snippet.html`, `DESIGN.md` | Create a new `Name.dc.html`; copy the `<helmet>` block from the design-system page or snippet. |
 | Static / plain-CSS canvas output | bound DS token CSS (via root `styles.css`) | Use `var(--*)` tokens only; no JSON import, npm, ESM, or bundler. |
 | Canvas prototype needs React state/interaction | `CLAUDE.md` § Canvas runtime constraints | DCs already render React; for escape-hatch pages use UMD React + Babel + `window` globals only. |
 | New page, major layout, visual direction, landing, dashboard, app shell, specimen, or component | `scripts/detect-canvas-antipatterns.mjs`, `skills/visual-originality-audit.skill.md`, `skills/ui-audit.skill.md` | Execute detect-canvas-antipatterns on targets **first**; then originality + UI audits. |

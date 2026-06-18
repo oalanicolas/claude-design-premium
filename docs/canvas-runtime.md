@@ -46,9 +46,8 @@ facts below are therefore best-available `[SECONDARY]`/`[INFERENCE]`, corroborat
   document. `[AGENT-OBSERVED]`
 - **ES module imports / bare specifiers / bundler imports.** `import React from 'react'` and
   `import { X } from './x.jsx'` do not resolve as a normal repo module graph. `[SECONDARY]`
-- **Repo-style JSX/React component imports as the scaffold runtime.** The kit's `.jsx` files and
-  `starter-kit/index.js` are repo-source for the external build, never a canvas runtime path.
-  `[USER-VERIFIED]`
+- **Repo-style JSX/React component imports as the scaffold runtime.** `.jsx` sources in the bound DS
+  are for external repo builds, never a canvas runtime path. `[USER-VERIFIED]`
 - npm package imports or any path that needs Node resolution at preview time. `[INFERENCE]`
 
 ## Why ESM imports fail, and when global bundles work
@@ -63,14 +62,12 @@ Consequences for this kit:
 
 1. A self-contained UMD/IIFE/global script loaded by `<script src>` can work in the canvas when it
    exposes `window.<Namespace>` and contains no internal ESM, `import.meta`, npm resolution, or
-   wrong relative-path assumptions. See `starter-kit/static/global-script-example/`.
+   wrong relative-path assumptions.
 2. A generated bundle fails when it still expects a module graph, dev server, import map, package
    resolver, or asset paths that differ from the HTML document location.
-3. The starter kit's React `.jsx` files (with `import`s) target the **external repo build**
-   (Astro/Vite/Next) only.
-4. In-browser JSX works as an escape hatch, but it must follow the UMD+Babel pattern. See
-   `starter-kit/static/react-example/`. The default kit still authors plain HTML/CSS/vanilla JS
-   because that path is lighter and migrates cleanly afterward.
+3. React `.jsx` files with `import`s target the **external repo build** (Astro/Vite/Next) only.
+4. In-browser JSX works as an escape hatch via UMD React + Babel standalone + `window` globals.
+   Default canvas authoring stays plain HTML/CSS/vanilla JS because it is lighter and migrates cleanly.
 
 ## Recommended authoring pattern (canvas-safe)
 
@@ -79,17 +76,12 @@ low-friction path, and the one that migrates cleanly to any framework later. Use
 stateful interaction makes it worth the extra runtime.
 
 - **Tokens** -> CSS custom properties in the active token CSS (see Token runtime below).
-- **Native templates** -> `templates/<slug>/index.html` with
-  `<!-- @template name="..." description="..." -->` when the design system should expose starter
-  templates in Claude Design.
-- **Portable fallback templates** -> `starter-kit/static/templates/*.html` when you only need static
-  files outside the native template track.
-- **Behavior** -> small vanilla scripts like `starter-kit/static/assets/js/boot.js` (IIFE, DOM only,
-  no imports), with data in a `window` global like `assets/config/site.js`.
-- **Optional global script** -> `starter-kit/static/global-script-example/` for a self-contained
-  `window.X` pattern.
-- **React escape hatch** -> `starter-kit/static/react-example/` for UMD React + Babel standalone +
-  `window` globals.
+- **Deliverables** -> one `Name.dc.html` per screen; copy the `<helmet>` block from
+  `design-system.dc.html` or `ds-helmet.snippet.html` after bootstrap.
+- **Behavior** -> small vanilla IIFE scripts (DOM only, no imports), with config on `window` when
+  shared state is needed.
+- **React escape hatch** -> UMD React + Babel standalone + `window` globals when stateful UI is worth
+  the extra runtime.
 
 Use Claude Design Web for: authoring the static system, previewing HTML/CSS/JS, validating visual
 direction / responsiveness / accessibility heuristics, and extracting a reusable component inventory.

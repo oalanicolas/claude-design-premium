@@ -64,7 +64,9 @@ const signals = {
     hasLiteralRoutingTable: /Literal routing table/i.test(claude),
     hasMandatoryReporting: claude.includes('SKILLS APPLIED') && claude.includes('NOT APPLIED'),
     referencesBoundDs: claude.includes('BOUND_DS.json'),
-    isAgnostic: !/academia-ds-460d36aa/i.test(claude),
+    // Generic: a bound CLAUDE.md hardcodes a concrete _ds/<bundle-id> path.
+    // The agnostic template references _ds/<bundle>/ as a placeholder only.
+    isAgnostic: !/_ds\/[a-z0-9][a-z0-9-]*\//i.test(claude),
     skillCount: skillFiles.length,
   },
   binding: {
@@ -90,7 +92,12 @@ const signals = {
   design: {
     hasDesignMd: exists('DESIGN.md'),
     referencesBoundDs: design.includes('BOUND_DS.json') || design.includes('{{BOUND_DS'),
-    isAgnostic: !/Academia Lendária|Lendár\[IA\]/i.test(design),
+    // Generic: agnostic = still the unconfigured template (no concrete DS bound),
+    // or a bound _ds/<bundle-id> path is present. No business names hardcoded.
+    isAgnostic:
+      design.includes('CDP:UNCONFIGURED') ||
+      /Describe the product's visual register/i.test(design) ||
+      !/_ds\/[a-z0-9][a-z0-9-]*\//i.test(design),
     needsAutoSetup: design.includes('CDP:UNCONFIGURED') || /Describe the product's visual register/i.test(design),
   },
   harness: {

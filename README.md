@@ -56,7 +56,7 @@ applies their JavaScript logic (paired with skills in the correct order).
 | `DESIGN.md` | Visual identity (generated in step 4) |
 | `skills/` | Audits, polish, handoff (paired with scripts) |
 | `scripts/` | Deterministic JS pipeline  -  **harness foundation in canvas** |
-| `design-system.dc.html` | Specimen page with real tokens, components, surfaces, and manifest cards |
+| `design-system.dc.html` | Bootstrap scaffold + harness prompts; full showcase assembled by the model (`assemble-design-system-showcase`) |
 | `support.js` | Browser runtime for DCs |
 
 Order: [`docs/script-pipeline.md`](docs/script-pipeline.md)

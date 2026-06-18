@@ -21,7 +21,7 @@ Run in this order. Skip only when the trigger does not apply.
 | 1 | `detect-bound-ds.mjs` (`detectHostDs`) | `harness-auto-setup` | Detect `builder` (root manifest) or `consumer` (`_ds/`) |
 | 2 | `extract-ds-voice.mjs` | `harness-auto-setup` | During bootstrap  -  readme -> voice object |
 | 3 | `bootstrap-harness.mjs` | `harness-auto-setup` | Harness unbound  -  technical placeholders |
-| 4 | `personalize-dc.mjs` | `harness-auto-setup` | Immediately after step 3  -  voice + DC pruning |
+| 4 | `personalize-dc.mjs` | `harness-auto-setup` | Bootstrap seam after step 3 (no-op; scaffold fully materialized in step 3) |
 | 5 | native `check_design_system` | `design-system-guardian` | After binding; strongest DS proof |
 | 6 | `detect-canvas-antipatterns.mjs` | `visual-originality-audit`, `ui-audit`, `mobile-first-audit`, `accessibility-audit` | Before polish/final on `*.dc.html` targets |
 | 7 | `detect-text-antipatterns.mjs` | `text-integrity-audit` | Before final on copy-heavy deliverables |

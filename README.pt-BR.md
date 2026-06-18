@@ -56,7 +56,7 @@ aplica a lógica JavaScript (pareado com as skills na ordem certa).
 | `DESIGN.md` | Identidade visual (gerado no passo 4) |
 | `skills/` | Auditorias, polish, handoff (pareadas com scripts) |
 | `scripts/` | Pipeline determinístico JS  -  **base do harness no canvas** |
-| `design-system.dc.html` | Página specimen com tokens, componentes, superfícies e cards reais do manifesto |
+| `design-system.dc.html` | Scaffold do bootstrap + prompts do harness; vitrine completa montada pelo modelo (`assemble-design-system-showcase`) |
 | `support.js` | Runtime browser dos DCs |
 
 Ordem: [`docs/script-pipeline.md`](docs/script-pipeline.md)

@@ -66,6 +66,12 @@
     .cdp-prompt code{font-family:var(--font-mono);font-size:12px;line-height:1.55;color:var(--foreground);white-space:pre-wrap;}
     .cdp-prompt .md-copy{float:right;margin:0 0 10px 12px;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--hairline-strong);background:var(--card);color:var(--foreground);font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.08em;padding:6px 8px;border-radius:var(--radius-sm);}
     .cdp-prompt .md-copy.ok{color:var(--primary);}
+    @media (prefers-reduced-motion: reduce){
+      html.sc-dc-streaming .sc-placeholder::before,
+      html.sc-dc-streaming .sc-interp.sc-missing::before,
+      html.sc-dc-streaming::after{animation:none!important;}
+      *,*::before,*::after{transition-duration:0.001ms!important;scroll-behavior:auto!important;}
+    }
     @media (max-width:1180px){.cdp-rail{display:none;}.cdp-main{max-width:1040px;}}
     @media (max-width:820px){.cdp-two,.cdp-three{grid-template-columns:1fr;}.cdp-hero{min-height:auto;padding-top:28px;}.cdp-type-row,.cdp-scale-row{grid-template-columns:1fr;gap:8px;}.cdp-component-head{flex-direction:column;}.cdp-component-head code{text-align:left;max-width:none;}}
   </style>

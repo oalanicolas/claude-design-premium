@@ -131,23 +131,8 @@ function labels(language) {
       fonts: 'Fonts',
       cards: 'Specimens',
       theme: 'Theme',
-      foundationsEyebrow: 'Foundations',
-      foundationsTitle: 'Tokens, type, surfaces, and motion',
-      colors: 'Colors',
-      typography: 'Typography',
-      spacing: 'Spacing',
-      radius: 'Radius',
-      motion: 'Motion',
-      surfaces: 'Product surfaces',
-      componentEyebrow: 'Live components',
-      componentTitle: 'Every element from the namespace',
-      specimenEyebrow: 'Manifest previews',
-      specimenTitle: 'What the source project says matters',
       harnessEyebrow: 'Harness operation',
       harnessTitle: 'Prompts for creating deliverables',
-      empty: 'No data exposed by the manifest.',
-      source: 'Source',
-      group: 'Group',
       introFooter: 'Generated from the detected design system. If this page looks thin, the source manifest or readme is thin.',
       assemblyPendingTitle: 'Showcase pending assembly',
       assemblyPendingLead:
@@ -167,23 +152,8 @@ function labels(language) {
     fonts: 'Fontes',
     cards: 'Specimens',
     theme: 'Tema',
-    foundationsEyebrow: 'Fundamentos',
-    foundationsTitle: 'Tokens, tipo, superfícies e motion',
-    colors: 'Cores',
-    typography: 'Tipografia',
-    spacing: 'Espaçamento',
-    radius: 'Raios',
-    motion: 'Motion',
-    surfaces: 'Superfícies do produto',
-    componentEyebrow: 'Componentes vivos',
-    componentTitle: 'Todos os elementos do namespace',
-    specimenEyebrow: 'Previews do manifesto',
-    specimenTitle: 'O que o projeto fonte declara como importante',
     harnessEyebrow: 'Operação do harness',
     harnessTitle: 'Prompts para criar entregáveis',
-    empty: 'Nenhum dado exposto pelo manifesto.',
-    source: 'Origem',
-    group: 'Grupo',
     introFooter: 'Gerado a partir do design system detectado. Se esta página parecer pobre, o manifesto ou readme de origem está pobre.',
     assemblyPendingTitle: 'Vitrine pendente de montagem',
     assemblyPendingLead:
@@ -199,9 +169,9 @@ function renderMetricPlaceholder(label, value) {
 /** Bootstrap scaffold only — full showcase is assembled by the model (see showcase-brief.mjs). */
 function renderShowcaseScaffold(language, binding, voice) {
   const l = labels(language);
-  const tokenCount = binding.tokens?.length ?? 0;
+  const tokenCount = binding.tokenCount ?? binding.tokens?.length ?? 0;
   const fontCount = binding.brandFonts?.length ?? 0;
-  const cardCount = binding.cardMeta?.length ?? binding.cards?.length ?? 0;
+  const cardCount = binding.cardMeta?.length ?? 0;
   const themeLabel = voice.themeLabel ?? (voice.themeDefault === 'light' ? 'DIA · LIGHT' : 'NOITE · DARK');
   const logo = voice.logoPath
     ? `<img src="${escapeHtml(voice.logoPath)}" alt="" style="width:42px;height:42px;object-fit:contain;">`
@@ -253,7 +223,7 @@ function enrichBindingFromManifest(binding, cwd, voice) {
   return {
     ...binding,
     voice,
-    tokens: binding.tokens ?? manifest?.tokens ?? [],
+    tokenCount: binding.tokenCount ?? manifest?.tokens?.length ?? 0,
     componentMeta:
       binding.componentMeta ??
       (manifest?.components ?? []).map((c) => ({
@@ -264,445 +234,6 @@ function enrichBindingFromManifest(binding, cwd, voice) {
     startingPoints: binding.startingPoints ?? manifest?.startingPoints ?? [],
     brandFonts: binding.brandFonts ?? manifest?.brandFonts ?? [],
   };
-}
-
-function slug(name) {
-  return String(name)
-    .replace(/([a-z])([A-Z])/g, '$1-$2')
-    .replace(/[^a-zA-Z0-9]+/g, '-')
-    .toLowerCase();
-}
-
-function renderDesignSystemCss() {
-  return `
-  .cdp-ds { display:grid; grid-template-columns:minmax(200px,240px) minmax(0,1fr); gap:0; align-items:start; }
-  @media (max-width:900px){ .cdp-ds { grid-template-columns:1fr; } .cdp-rail { position:relative !important; height:auto !important; border-right:0 !important; border-bottom:1px solid var(--hairline); } }
-  .cdp-rail { position:sticky; top:0; height:100vh; overflow-y:auto; padding:24px 14px 48px; border-right:1px solid var(--hairline); background:var(--background); display:flex; flex-direction:column; gap:4px; }
-  .cdp-rail > a { font-family:var(--font-mono); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted-foreground); padding:7px 10px; border-left:2px solid transparent; text-decoration:none; line-height:1.35; }
-  .cdp-rail > a:hover { color:var(--foreground); border-left-color:var(--hairline-strong); }
-  .cdp-rail .cdp-nav-group { margin:12px 0 4px; font-size:9px; letter-spacing:0.2em; color:var(--primary); padding:0 10px; }
-  .cdp-rail .cdp-nav-comp { font-size:11px; letter-spacing:0.04em; text-transform:none; padding-left:18px; }
-  .cdp-main { padding:40px clamp(18px,4vw,32px) 96px; min-width:0; }
-  .cdp-hero { display:flex; flex-direction:column; gap:16px; margin-bottom:56px; padding-bottom:40px; border-bottom:1px solid var(--hairline); }
-  .cdp-brandline { display:flex; align-items:center; gap:14px; font-family:var(--font-serif); font-size:var(--font-size-lg); }
-  .cdp-kicker { font-family:var(--font-mono); font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:var(--primary); margin:0; }
-  .cdp-hero h1 { font-family:var(--font-display); font-weight:300; font-size:var(--font-size-5xl); line-height:1.02; letter-spacing:-0.01em; margin:0; max-width:22ch; }
-  .cdp-hero > p { font-family:var(--font-serif); font-style:italic; color:var(--muted-foreground); font-size:var(--font-size-lg); max-width:62ch; margin:0; line-height:1.5; }
-  .cdp-metrics { display:flex; flex-wrap:wrap; gap:24px; margin-top:4px; }
-  .cdp-section { display:flex; flex-direction:column; gap:28px; margin-bottom:56px; scroll-margin-top:88px; }
-  .cdp-two { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; }
-  .cdp-three { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; margin-top:20px; }
-  .cdp-panel, .cdp-foundation-block { border:1px solid var(--hairline); padding:20px 22px; background:var(--background); }
-  .cdp-panel h3, .cdp-foundation-block h3 { margin:0 0 14px; font-family:var(--font-mono); font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--primary); }
-  .cdp-note { margin:0; font-size:var(--font-size-sm); color:var(--muted-foreground); line-height:1.55; }
-  .cdp-token-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:1px; background:var(--hairline); border:1px solid var(--hairline); }
-  .cdp-token { display:flex; align-items:center; gap:12px; background:var(--background); padding:12px 14px; }
-  .cdp-swatch { width:36px; height:36px; flex:none; border:1px solid var(--hairline-strong); border-radius:var(--radius-base,2px); }
-  .cdp-token b { display:block; font-family:var(--font-mono); font-size:10px; letter-spacing:0.04em; }
-  .cdp-token small { display:block; font-size:10px; color:var(--muted-foreground); margin-top:2px; word-break:break-all; }
-  .cdp-type-list, .cdp-scale { display:flex; flex-direction:column; gap:10px; }
-  .cdp-type-row, .cdp-scale-row { display:grid; grid-template-columns:140px 1fr; gap:16px; align-items:baseline; border-top:1px solid var(--hairline); padding:12px 0; }
-  .cdp-type-row small, .cdp-scale-row small { color:var(--muted-foreground); font-size:10px; }
-  .cdp-token-list { display:flex; flex-direction:column; gap:8px; }
-  .cdp-token-list span { display:flex; flex-direction:column; gap:2px; border-top:1px solid var(--hairline); padding-top:8px; }
-  .cdp-token-list b { font-family:var(--font-mono); font-size:10px; }
-  .cdp-token-list small { font-size:10px; color:var(--muted-foreground); }
-  .cdp-surface-grid, .cdp-specimen-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; }
-  .cdp-surface, .cdp-specimen { border:1px solid var(--hairline); padding:18px 20px; }
-  .cdp-surface h3, .cdp-specimen h3 { margin:6px 0 0; font-family:var(--font-serif); font-size:var(--font-size-lg); }
-  .cdp-specimen p { margin:8px 0 0; font-size:var(--font-size-sm); color:var(--muted-foreground); line-height:1.5; }
-  .cdp-specimen dl { margin:12px 0 0; font-size:11px; color:var(--muted-foreground); }
-  .cdp-specimen dt { font-family:var(--font-mono); text-transform:uppercase; letter-spacing:0.12em; }
-  .cdp-specimen dd { margin:2px 0 8px; word-break:break-all; }
-  .cdp-group-label { display:flex; align-items:center; gap:16px; margin:8px 0 20px; font-family:var(--font-mono); font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--primary); }
-  .cdp-group-label::after { content:""; flex:1; height:1px; background:var(--hairline); }
-  .cdp-component-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr)); gap:24px; }
-  .cdp-component { border:1px solid var(--hairline); padding:22px 24px; display:flex; flex-direction:column; gap:12px; scroll-margin-top:88px; }
-  .cdp-component-head { display:flex; justify-content:space-between; gap:16px; align-items:flex-start; }
-  .cdp-component-head h3 { margin:4px 0 0; font-family:var(--font-serif); font-size:var(--font-size-xl); }
-  .cdp-component-head code { font-family:var(--font-mono); font-size:10px; color:var(--muted-foreground); word-break:break-all; }
-  .cdp-component > p { margin:0; font-size:var(--font-size-sm); color:var(--muted-foreground); line-height:1.55; }
-  .cdp-component-demo { padding-top:8px; }
-  .cdp-row { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
-  .cdp-stack { display:flex; flex-direction:column; gap:10px; }
-  .cdp-book-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:20px; }
-  .cdp-prompts { display:flex; flex-direction:column; }
-  .cdp-prompt-item { border-top:1px solid var(--hairline); padding:28px 0; display:flex; flex-direction:column; gap:16px; }
-  .cdp-prompt-head { display:flex; gap:14px; align-items:flex-start; }
-  .cdp-prompt-head p { margin:0; }
-  .cdp-prompt-title { font-family:var(--font-serif); font-size:var(--font-size-xl); line-height:1.1; }
-  .cdp-prompt-desc { font-size:var(--font-size-sm); color:var(--muted-foreground); line-height:1.5; }
-`.trim();
-}
-
-function tokenValue(token) {
-  if (!token?.name) return '';
-  if (token.name.endsWith('-hsl')) return `hsl(var(${token.name}))`;
-  return `var(${token.name})`;
-}
-
-function tokenRows(tokens, predicate, limit) {
-  return (tokens ?? [])
-    .filter(predicate)
-    .filter((token) => !token.scope)
-    .slice(0, limit);
-}
-
-function renderMetric(label, value) {
-  return `<x-import component-from-global-scope="{{BOUND_DS_NAMESPACE}}.StatChip" label="${escapeHtml(label)}" value="${escapeHtml(value)}" hint-size="auto,28px"></x-import>`;
-}
-
-function renderColorTokens(binding, language) {
-  const l = labels(language);
-  const picked = tokenRows(
-    binding.tokens,
-    (token) =>
-      token.kind === 'color' &&
-      !/-hsl$/.test(token.name ?? '') &&
-      !String(token.value ?? '').startsWith('hsl(var('),
-    32,
-  );
-
-  if (!picked.length) return `<p class="cdp-note">${l.empty}</p>`;
-
-  return `<div class="cdp-token-grid">${picked
-    .map((token) => {
-      const background = tokenValue(token);
-      return `<div class="cdp-token">
-        <span class="cdp-swatch" style="background:${background};"></span>
-        <span><b>${escapeHtml(token.name)}</b><small>${escapeHtml(token.value)}</small></span>
-      </div>`;
-    })
-    .join('\n')}</div>`;
-}
-
-function renderTypography(binding, language) {
-  const l = labels(language);
-  const fonts = binding.brandFonts?.length
-    ? binding.brandFonts
-    : tokenRows(binding.tokens, (token) => /^--font-(sans|serif|mono|display)/.test(token.name ?? ''), 8).map((token) => ({
-        family: token.name,
-        tokens: [token.name],
-        path: token.definedIn,
-      }));
-  const sizes = tokenRows(binding.tokens, (token) => /^--font-size-/.test(token.name ?? ''), 12);
-
-  const fontRows = fonts.length
-    ? fonts
-        .map(
-          (font) => `<div class="cdp-type-row">
-            <span class="cdp-kicker">${escapeHtml(font.tokens?.join(', ') || l.fonts)}</span>
-            <span style="font-family:${escapeHtml(font.family)};">${escapeHtml(font.family)}</span>
-            <small>${escapeHtml(font.path ?? '')}</small>
-          </div>`,
-        )
-        .join('\n')
-    : `<p class="cdp-note">${l.empty}</p>`;
-
-  const sizeRows = sizes
-    .map(
-      (token) => `<div class="cdp-scale-row">
-        <span>${escapeHtml(token.name)}</span>
-        <b style="font-size:var(${escapeHtml(token.name)});">Aa</b>
-        <small>${escapeHtml(token.value)}</small>
-      </div>`,
-    )
-    .join('\n');
-
-  return `<div class="cdp-type-list">${fontRows}</div>${sizeRows ? `<div class="cdp-scale">${sizeRows}</div>` : ''}`;
-}
-
-function renderSimpleTokenList(binding, title, predicate, limit = 12) {
-  const rows = tokenRows(binding.tokens, predicate, limit);
-  if (!rows.length) return '';
-  return `<div class="cdp-foundation-block">
-    <h3>${escapeHtml(title)}</h3>
-    <div class="cdp-token-list">${rows
-      .map((token) => `<span><b>${escapeHtml(token.name)}</b><small>${escapeHtml(token.value)}</small></span>`)
-      .join('\n')}</div>
-  </div>`;
-}
-
-function componentGroup(name, meta) {
-  const source = meta?.sourcePath ?? '';
-  if (source.includes('/brand/')) return 'Brand';
-  if (source.includes('/forms/')) return 'Forms';
-  if (source.includes('/display/')) return 'Display';
-  if (source.includes('/core/')) return 'Core';
-  if (/BookCard|SectionHeader/.test(name)) return 'Brand';
-  if (/Input|Textarea|Label|Switch|Checkbox/.test(name)) return 'Forms';
-  if (/Alert|Avatar|Progress|StatChip|Tabs/.test(name)) return 'Display';
-  return 'Core';
-}
-
-function componentDescription(name, language) {
-  const pt = {
-    BookCard: 'Item editorial de biblioteca: capa, status mono, título serif e autor.',
-    SectionHeader: 'Cabeçalho de seção com eyebrow, título serif e hairline de marca.',
-    Badge: 'Pílulas e chips de estado. Variantes sem virar blocos grandes de cor.',
-    Button: 'Botões caps tracked. CTA preenchido deve continuar raro.',
-    Card: 'Superfície base: hairline, raio baixo e hierarquia editorial.',
-    CardHeader: 'Área superior do Card. Carrega título e descrição.',
-    CardTitle: 'Título serif dentro da família Card.',
-    CardDescription: 'Descrição secundária, geralmente serif itálica ou muted.',
-    CardContent: 'Área principal de conteúdo do Card.',
-    CardFooter: 'Área de ações do Card, separada da leitura principal.',
-    Icon: 'Wrapper Iconoir. Use nomes kebab-case do app.',
-    Alert: 'Feedback inline com borda e fundo tintados.',
-    Avatar: 'Imagem ou iniciais em tamanhos controlados.',
-    Progress: 'Linha de progresso fina, com fill de marca.',
-    StatChip: 'Par label/valor para métricas e estados compactos.',
-    Tabs: 'Tabs editoriais com régua ativa.',
-    Checkbox: 'Controle binário com check de marca.',
-    Input: 'Campo de texto com foco no token de ring.',
-    Label: 'Rótulo de campo no padrão do DS.',
-    Switch: 'Toggle com estado ativo em marca.',
-    Textarea: 'Campo multilinha com a mesma receita do input.',
-  };
-  const en = {
-    BookCard: 'Editorial library item: cover, mono status, serif title, and author.',
-    SectionHeader: 'Section header with eyebrow, serif title, and brand hairline.',
-    Badge: 'Pills and status chips without large color blocks.',
-    Button: 'Tracked uppercase buttons. Filled CTA stays rare.',
-    Card: 'Base surface: hairline, low radius, editorial hierarchy.',
-    CardHeader: 'Top area of the Card family. Holds title and description.',
-    CardTitle: 'Serif title inside the Card family.',
-    CardDescription: 'Secondary description, usually muted or italic serif.',
-    CardContent: 'Main content area of the Card.',
-    CardFooter: 'Action area of the Card, separated from reading content.',
-    Icon: 'Iconoir wrapper. Use app kebab-case names.',
-    Alert: 'Inline feedback with tinted border and background.',
-    Avatar: 'Image or initials in controlled sizes.',
-    Progress: 'Thin progress line with brand fill.',
-    StatChip: 'Label/value pair for compact metrics and state.',
-    Tabs: 'Editorial tabs with active rule.',
-    Checkbox: 'Binary control with brand check.',
-    Input: 'Text field with token-driven focus ring.',
-    Label: 'Field label using DS recipe.',
-    Switch: 'Toggle with brand active state.',
-    Textarea: 'Multiline field sharing the input recipe.',
-  };
-  return (language === 'en' ? en : pt)[name] ?? (language === 'en' ? 'Component exposed by the manifest.' : 'Componente exposto pelo manifesto.');
-}
-
-function componentDemo(name, ns, language) {
-  const email = language === 'en' ? 'you@example.com' : 'seu@email.com';
-  const note = language === 'en' ? 'Write a note...' : 'Escreva uma anotação...';
-  const title = language === 'en' ? 'Essential Reading' : 'Leitura essencial';
-  const author = language === 'en' ? 'Editorial Team' : 'Curadoria Lendária';
-
-  const demos = {
-    BookCard: `<div class="cdp-book-grid"><x-import component-from-global-scope="${ns}.BookCard" title="${title}" author="${author}" category="Biblioteca" status="reading" hint-size="100%,320px"></x-import><x-import component-from-global-scope="${ns}.BookCard" title="IA e Consciência" author="Academia Lendária" category="Trilha" status="read" hint-size="100%,320px"></x-import></div>`,
-    SectionHeader: `<x-import component-from-global-scope="${ns}.SectionHeader" eyebrow="${language === 'en' ? 'Library' : 'Biblioteca'}" title="${language === 'en' ? 'Most read this week' : 'Mais lidos da semana'}" hint-size="100%,72px"></x-import>`,
-    Badge: `<div class="cdp-row"><x-import component-from-global-scope="${ns}.Badge" variant="brand" hint-size="auto,24px">Curadoria</x-import><x-import component-from-global-scope="${ns}.Badge" variant="success" hint-size="auto,24px">Lido</x-import><x-import component-from-global-scope="${ns}.Badge" variant="warning" hint-size="auto,24px">Em pausa</x-import><x-import component-from-global-scope="${ns}.Badge" variant="info" hint-size="auto,24px">Novo</x-import><x-import component-from-global-scope="${ns}.Badge" variant="destructive" hint-size="auto,24px">Atenção</x-import></div>`,
-    Button: `<div class="cdp-row"><x-import component-from-global-scope="${ns}.Button" hint-size="auto,40px">Default</x-import><x-import component-from-global-scope="${ns}.Button" variant="outline" hint-size="auto,40px">Outline</x-import><x-import component-from-global-scope="${ns}.Button" variant="secondary" hint-size="auto,40px">Secondary</x-import><x-import component-from-global-scope="${ns}.Button" variant="ghost" hint-size="auto,40px">Ghost</x-import><x-import component-from-global-scope="${ns}.Button" variant="link" hint-size="auto,32px">link</x-import></div>`,
-    Card: `<x-import component-from-global-scope="${ns}.Card" hint-size="100%,180px"><x-import component-from-global-scope="${ns}.CardHeader" hint-size="100%,72px"><x-import component-from-global-scope="${ns}.CardTitle" hint-size="auto,28px">Card</x-import><x-import component-from-global-scope="${ns}.CardDescription" hint-size="auto,24px">${language === 'en' ? 'Card family anatomy.' : 'Anatomia da família Card.'}</x-import></x-import><x-import component-from-global-scope="${ns}.CardContent" hint-size="100%,70px"><p style="margin:0;color:var(--muted-foreground);font-size:var(--font-size-sm);">Header, Title, Description, Content, Footer.</p></x-import></x-import>`,
-    CardHeader: `<x-import component-from-global-scope="${ns}.Card" hint-size="100%,120px"><x-import component-from-global-scope="${ns}.CardHeader" hint-size="100%,72px"><x-import component-from-global-scope="${ns}.CardTitle" hint-size="auto,28px">CardHeader</x-import><x-import component-from-global-scope="${ns}.CardDescription" hint-size="auto,24px">Topo da superfície.</x-import></x-import></x-import>`,
-    CardTitle: `<x-import component-from-global-scope="${ns}.CardTitle" hint-size="auto,32px">CardTitle serif</x-import>`,
-    CardDescription: `<x-import component-from-global-scope="${ns}.CardDescription" hint-size="auto,32px">Descrição secundária do card.</x-import>`,
-    CardContent: `<x-import component-from-global-scope="${ns}.CardContent" hint-size="100%,64px"><p style="margin:0;color:var(--muted-foreground);font-size:var(--font-size-sm);">Conteúdo principal com ritmo interno.</p></x-import>`,
-    CardFooter: `<x-import component-from-global-scope="${ns}.CardFooter" hint-size="100%,64px"><x-import component-from-global-scope="${ns}.Button" variant="outline" size="sm" hint-size="auto,34px">Ação</x-import></x-import>`,
-    Icon: `<div class="cdp-row"><x-import component-from-global-scope="${ns}.Icon" name="book" size="size-8" hint-size="32px,32px"></x-import><x-import component-from-global-scope="${ns}.Icon" name="play-circle" size="size-8" hint-size="32px,32px"></x-import><x-import component-from-global-scope="${ns}.Icon" name="brain" size="size-8" hint-size="32px,32px"></x-import><x-import component-from-global-scope="${ns}.Icon" name="search" size="size-8" hint-size="32px,32px"></x-import></div>`,
-    Alert: `<div class="cdp-stack"><x-import component-from-global-scope="${ns}.Alert" variant="success" hint-size="100%,44px">Link de acesso enviado.</x-import><x-import component-from-global-scope="${ns}.Alert" variant="warning" hint-size="100%,44px">Sua assinatura expira em 3 dias.</x-import><x-import component-from-global-scope="${ns}.Alert" variant="info" hint-size="100%,44px">Novo módulo disponível.</x-import></div>`,
-    Avatar: `<div class="cdp-row"><x-import component-from-global-scope="${ns}.Avatar" name="Ana Nunes" size="sm" hint-size="32px,32px"></x-import><x-import component-from-global-scope="${ns}.Avatar" name="Bruno Lemos" hint-size="40px,40px"></x-import><x-import component-from-global-scope="${ns}.Avatar" name="Clara Reis" size="lg" hint-size="56px,56px"></x-import><x-import component-from-global-scope="${ns}.Avatar" name="Daniel Torres" size="xl" hint-size="80px,80px"></x-import></div>`,
-    Progress: `<div class="cdp-stack"><x-import component-from-global-scope="${ns}.Progress" value="{{ 64 }}" hint-size="100%,8px"></x-import><x-import component-from-global-scope="${ns}.Progress" value="{{ 28 }}" hint-size="100%,8px"></x-import><x-import component-from-global-scope="${ns}.Progress" value="{{ 100 }}" hint-size="100%,8px"></x-import></div>`,
-    StatChip: `<div class="cdp-row"><x-import component-from-global-scope="${ns}.StatChip" label="Membros" value="3.847" hint-size="auto,28px"></x-import><x-import component-from-global-scope="${ns}.StatChip" label="Sequência" value="12 dias" tone="primary" hint-size="auto,28px"></x-import><x-import component-from-global-scope="${ns}.StatChip" label="Concluídos" value="48" tone="success" hint-size="auto,28px"></x-import></div>`,
-    Tabs: `<div class="cdp-stack"><x-import component-from-global-scope="${ns}.Tabs" items="{{ tabItems }}" value="{{ activeTab }}" on-value-change="{{ setTab }}" hint-size="100%,44px"></x-import><p style="margin:0;color:var(--muted-foreground);font-family:var(--font-serif);font-style:italic;">{{ tabContent }}</p></div>`,
-    Checkbox: `<div class="cdp-row"><x-import component-from-global-scope="${ns}.Checkbox" default-checked="{{ true }}" hint-size="18px,18px"></x-import><span>Receber lembrete diário</span></div>`,
-    Input: `<x-import component-from-global-scope="${ns}.Input" type="email" placeholder="${email}" hint-size="100%,40px"></x-import>`,
-    Label: `<x-import component-from-global-scope="${ns}.Label" hint-size="auto,18px">E-mail</x-import>`,
-    Switch: `<div class="cdp-row"><x-import component-from-global-scope="${ns}.Switch" default-checked="{{ true }}" hint-size="44px,24px"></x-import><span>Trilha ativa</span></div>`,
-    Textarea: `<x-import component-from-global-scope="${ns}.Textarea" placeholder="${note}" rows="3" hint-size="100%,90px"></x-import>`,
-  };
-
-  return demos[name] ?? `<x-import component-from-global-scope="${ns}.${name}" hint-size="100%,60px">${escapeHtml(name)}</x-import>`;
-}
-
-function renderComponentCard(name, binding, language) {
-  const ns = binding.namespace;
-  const meta = (binding.componentMeta ?? []).find((item) => item.name === name);
-  return `<article class="cdp-component" id="comp-${slug(name)}">
-    <div class="cdp-component-head">
-      <div>
-        <span class="cdp-kicker">${escapeHtml(componentGroup(name, meta))}</span>
-        <h3>${escapeHtml(name)}</h3>
-      </div>
-      ${meta?.sourcePath ? `<code>${escapeHtml(meta.sourcePath)}</code>` : ''}
-    </div>
-    <p>${escapeHtml(componentDescription(name, language))}</p>
-    <div class="cdp-component-demo">${componentDemo(name, ns, language)}</div>
-  </article>`;
-}
-
-function renderComponents(binding, language) {
-  const groups = new Map();
-  for (const name of binding.components ?? []) {
-    const meta = (binding.componentMeta ?? []).find((item) => item.name === name);
-    const group = componentGroup(name, meta);
-    if (!groups.has(group)) groups.set(group, []);
-    groups.get(group).push(name);
-  }
-
-  return [...groups.entries()]
-    .map(
-      ([group, names]) => `<div class="cdp-component-group">
-        <div class="cdp-group-label">${escapeHtml(group)}</div>
-        <div class="cdp-component-grid">${names.map((name) => renderComponentCard(name, binding, language)).join('\n')}</div>
-      </div>`,
-    )
-    .join('\n');
-}
-
-function renderSpecimens(binding, language) {
-  const l = labels(language);
-  const cards = binding.cardMeta?.length
-    ? binding.cardMeta
-    : (binding.cards ?? []).map((name) => ({ name }));
-  const starts = binding.startingPoints ?? [];
-  const rows = [...cards, ...starts].filter((item) => item.name || item.path);
-
-  if (!rows.length) return `<p class="cdp-note">${l.empty}</p>`;
-
-  return `<div class="cdp-specimen-grid">${rows
-    .map(
-      (item) => `<article class="cdp-specimen">
-        <span class="cdp-kicker">${escapeHtml(item.group ?? item.section ?? l.source)}</span>
-        <h3>${escapeHtml(item.name)}</h3>
-        ${item.subtitle ? `<p>${escapeHtml(item.subtitle)}</p>` : ''}
-        <dl>
-          ${item.path ? `<div><dt>path</dt><dd>${escapeHtml(item.path)}</dd></div>` : ''}
-          ${item.previewPath ? `<div><dt>preview</dt><dd>${escapeHtml(item.previewPath)}</dd></div>` : ''}
-          ${item.viewport ? `<div><dt>viewport</dt><dd>${escapeHtml(item.viewport)}</dd></div>` : ''}
-        </dl>
-      </article>`,
-    )
-    .join('\n')}</div>`;
-}
-
-function renderSurfaces(voice, language) {
-  const l = labels(language);
-  const surfaces = voice.surfaces ?? [];
-  if (!surfaces.length) return `<p class="cdp-note">${l.empty}</p>`;
-  return `<div class="cdp-surface-grid">${surfaces
-    .map(
-      (surface, index) => `<article class="cdp-surface">
-        <span class="cdp-kicker">${String(index + 1).padStart(2, '0')}</span>
-        <h3>${escapeHtml(surface)}</h3>
-      </article>`,
-    )
-    .join('\n')}</div>`;
-}
-
-function renderPromptList(language) {
-  const l = labels(language);
-  const lead =
-    language === 'en'
-      ? 'Copy a prompt only after inspecting the design system above. Replace the bracketed part and keep each deliverable anchored to the tokens and components shown here.'
-      : 'Copie um prompt só depois de inspecionar o design system acima. Troque o trecho entre colchetes e mantenha cada entrega ancorada nos tokens e componentes mostrados aqui.';
-  return `<p class="cdp-note">${escapeHtml(lead)}</p>
-    <div class="cdp-prompt-list">
-      <sc-for list="{{ prompts }}" as="item" hint-placeholder-count="4">
-        <article class="cdp-prompt">
-          <span class="cdp-kicker">{{ item.tag }}</span>
-          <h3>{{ item.title }}</h3>
-          <p>{{ item.desc }}</p>
-          <pre data-lang="prompt"><button type="button" class="md-copy {{ item.okClass }}" onClick="{{ item.onCopy }}"><i class="iconoir-copy" aria-hidden="true"></i>{{ item.copyLabel }}</button><code>{{ item.prompt }}</code></pre>
-        </article>
-      </sc-for>
-    </div>`;
-}
-
-function buildNavRail(language, binding) {
-  const l = labels(language);
-  const lines = [
-    `<div class="cdp-nav-group">${escapeHtml(l.foundationsEyebrow)}</div>`,
-    `<a href="#fundamentos">${escapeHtml(l.foundationsTitle)}</a>`,
-    `<div class="cdp-nav-group">${escapeHtml(l.componentEyebrow)}</div>`,
-    `<a href="#componentes">${escapeHtml(l.componentTitle)}</a>`,
-  ];
-
-  for (const name of binding.components ?? []) {
-    lines.push(`<a class="cdp-nav-comp" href="#comp-${slug(name)}">${escapeHtml(name)}</a>`);
-  }
-
-  lines.push(
-    `<div class="cdp-nav-group">${escapeHtml(l.specimenEyebrow)}</div>`,
-    `<a href="#specimens">${escapeHtml(l.specimenTitle)}</a>`,
-    `<div class="cdp-nav-group">${escapeHtml(l.harnessEyebrow)}</div>`,
-    `<a href="#harness">${escapeHtml(l.harnessTitle)}</a>`,
-  );
-  return lines.join('\n      ');
-}
-
-function renderDesignSystemHtml(language, binding, voice) {
-  const l = labels(language);
-  const tokenCount = binding.tokens?.length ?? 0;
-  const fontCount = binding.brandFonts?.length ?? 0;
-  const cardCount = binding.cardMeta?.length ?? binding.cards?.length ?? 0;
-  const themeLabel = voice.themeLabel ?? (voice.themeDefault === 'light' ? 'DIA - LIGHT' : 'NOITE - DARK');
-  const logo = voice.logoPath
-    ? `<img src="${escapeHtml(voice.logoPath)}" alt="" style="width:42px;height:42px;object-fit:contain;">`
-    : '';
-
-  return `<div class="cdp-ds ${voice.themeDefault === 'light' ? 'light' : ''}">
-    <aside class="cdp-rail" aria-label="Design system index">
-      ${buildNavRail(language, binding)}
-    </aside>
-    <main class="cdp-main">
-      <header class="cdp-hero">
-        <div class="cdp-brandline">${logo}<span>${escapeHtml(binding.name)}</span></div>
-        <p class="cdp-kicker">${escapeHtml(l.eyebrow)}</p>
-        <h1>${escapeHtml(l.heroTitle)}</h1>
-        <p>${escapeHtml(l.heroLead)}</p>
-        <div class="cdp-metrics">
-          ${renderMetric(l.components, binding.componentCount ?? binding.components?.length ?? 0)}
-          ${renderMetric(l.tokens, tokenCount)}
-          ${renderMetric(l.fonts, fontCount)}
-          ${renderMetric(l.cards, cardCount)}
-          ${renderMetric(l.theme, themeLabel)}
-        </div>
-      </header>
-
-      <section class="cdp-section" id="fundamentos">
-        <x-import component-from-global-scope="${binding.namespace}.SectionHeader" eyebrow="${escapeHtml(l.foundationsEyebrow)}" title="${escapeHtml(l.foundationsTitle)}" hint-size="100%,72px"></x-import>
-        <div class="cdp-two">
-          <article class="cdp-panel">
-            <h3>${escapeHtml(l.colors)}</h3>
-            ${renderColorTokens(binding, language)}
-          </article>
-          <article class="cdp-panel">
-            <h3>${escapeHtml(l.typography)}</h3>
-            ${renderTypography(binding, language)}
-          </article>
-        </div>
-        <div class="cdp-three">
-          ${renderSimpleTokenList(binding, l.spacing, (token) => token.kind === 'spacing', 14)}
-          ${renderSimpleTokenList(binding, l.radius, (token) => token.kind === 'radius', 10)}
-          ${renderSimpleTokenList(binding, l.motion, (token) => token.definedIn?.includes('effects') || /duration|ease|transition/.test(token.name ?? ''), 12)}
-        </div>
-        <article class="cdp-panel">
-          <h3>${escapeHtml(l.surfaces)}</h3>
-          ${renderSurfaces(voice, language)}
-        </article>
-      </section>
-
-      <section class="cdp-section" id="componentes">
-        <x-import component-from-global-scope="${binding.namespace}.SectionHeader" eyebrow="${escapeHtml(l.componentEyebrow)}" title="${escapeHtml(l.componentTitle)}" hint-size="100%,72px"></x-import>
-        ${renderComponents(binding, language)}
-      </section>
-
-      <section class="cdp-section" id="specimens">
-        <x-import component-from-global-scope="${binding.namespace}.SectionHeader" eyebrow="${escapeHtml(l.specimenEyebrow)}" title="${escapeHtml(l.specimenTitle)}" hint-size="100%,72px"></x-import>
-        ${renderSpecimens(binding, language)}
-      </section>
-
-      <section class="cdp-section" id="harness">
-        <x-import component-from-global-scope="${binding.namespace}.SectionHeader" eyebrow="${escapeHtml(l.harnessEyebrow)}" title="${escapeHtml(l.harnessTitle)}" hint-size="100%,72px"></x-import>
-        <p class="cdp-note">${escapeHtml(l.introFooter)}</p>
-        ${renderPromptList(language)}
-      </section>
-    </main>
-  </div>`;
 }
 
 function buildPromptDefs(language, binding) {
@@ -907,26 +438,8 @@ function buildPromptDefs(language, binding) {
   ];
 }
 
-function buildIntroScript(language, binding, voice) {
+function buildIntroScript(language, binding) {
   const defs = buildPromptDefs(language, binding);
-  const tabContentMap =
-    language === 'en'
-      ? {
-          componentes: `${binding.componentCount} components ready in the namespace - all from the bundle.`,
-          tokens: 'Colors, typography, spacing, radii, and motion as var(--*) - single source in the bound DS.',
-          padroes: 'Layout patterns live in DESIGN.md section 6 - compose from bound components.',
-        }
-      : {
-          componentes: `${binding.componentCount} componentes prontos no namespace - todos saídos do bundle.`,
-          tokens: 'Cores, tipografia, espaçamento, raios e motion como var(--*) - fonte única no DS bound.',
-          padroes: 'Padrões de layout vivem no DESIGN.md seção 6 - componha a partir dos componentes bound.',
-        };
-
-  const tabLabels =
-    language === 'en'
-      ? { componentes: 'Components', tokens: 'Tokens', padroes: 'Patterns' }
-      : { componentes: 'Componentes', tokens: 'Tokens', padroes: 'Padrões' };
-
   const copiedLabel = language === 'en' ? 'Copied' : 'Copiado';
   const copyLabel = language === 'en' ? 'Copy' : 'Copiar';
 
@@ -940,7 +453,7 @@ function buildIntroScript(language, binding, voice) {
 
   return `<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1040,&quot;height&quot;:1100}}">
 class Component extends DCLogic {
-  state = { activeTab: 'componentes', copiedKey: null };
+  state = { copiedKey: null };
 
   componentWillUnmount() { clearTimeout(this._t); }
 
@@ -977,8 +490,6 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const tabContentMap = ${JSON.stringify(tabContentMap)};
-
     const defs = [
 ${defsJson}
     ];
@@ -990,18 +501,7 @@ ${defsJson}
       onCopy: () => this._copy(d.key, d.prompt),
     }));
 
-    return {
-      tabItems: [
-        { value: 'componentes', label: '${tabLabels.componentes}' },
-        { value: 'tokens', label: '${tabLabels.tokens}' },
-        { value: 'padroes', label: '${tabLabels.padroes}' },
-      ],
-      activeTab: this.state.activeTab,
-      setTab: (v) => this.setState({ activeTab: v }),
-      tabContent: tabContentMap[this.state.activeTab],
-      prompts,
-      themeClass: this.props.theme === 'light' ? 'light' : '',
-    };
+    return { prompts };
   }
 }
 </script>`;
@@ -1017,7 +517,6 @@ export function applyIntroCopy(text, language, binding, voice = binding.voice ??
 }
 
 function renderPromptsBlock(language) {
-  const l = labels(language);
   const lead =
     language === 'en'
       ? 'Copy a prompt only after inspecting the design system above. Replace <code style="font-family:var(--font-mono);font-size:0.85em;color:var(--foreground);">[brackets]</code> and keep every deliverable anchored to the tokens and components shown here.'
@@ -1052,7 +551,7 @@ export function injectPromptsBlock(text) {
 }
 
 export function injectIntroScript(text, language, binding, voice) {
-  const script = buildIntroScript(language, binding, voice);
+  const script = buildIntroScript(language, binding);
   if (text.includes('<!-- CDP:INTRO-SCRIPT -->')) {
     return text.replace(/<!-- CDP:INTRO-SCRIPT -->[\s\S]*?<!-- \/CDP:INTRO-SCRIPT -->/, script);
   }
@@ -1072,7 +571,7 @@ export function removeLegacyDcFiles(cwd = process.cwd()) {
 }
 
 /**
- * Materialize the single intro DC from template + binding + voice.
+ * Materialize the single design-system DC scaffold from template + binding + voice.
  * @returns {{ filename: string, removed: string[] }}
  */
 export function materializeIntroDc({ binding, voice, cwd = process.cwd(), patchFn }) {

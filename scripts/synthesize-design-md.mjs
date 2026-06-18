@@ -90,7 +90,7 @@ export function synthesizeDesignMd(binding, voice, cwd = process.cwd(), tokenSum
   const name = binding.name;
   const ns = binding.namespace;
   const components = binding.components ?? [];
-  const cards = binding.cards ?? [];
+  const cards = (binding.cardMeta ?? []).map((c) => c.name ?? c.path ?? String(c));
   const surfaces = voice.surfaces?.length
     ? voice.surfaces
     : ['Brand', 'Product', 'System'];
@@ -209,7 +209,7 @@ export function synthesizeDesignMd(binding, voice, cwd = process.cwd(), tokenSum
     `All components mount from \`${ns}\` after loading \`${binding.bundle}\`.`,
     '',
     'Major inventory:',
-    ...components.slice(0, 20).map((c) => `- **${c}** - use manifest/readme voice; see intro DC gallery (\`${binding.introDc ?? 'comece-por-aqui.dc.html'}\`) when present.`),
+    ...components.slice(0, 20).map((c) => `- **${c}** - use manifest/readme voice; see the assembled design-system DC (\`${binding.introDc ?? 'design-system.dc.html'}\`) when present.`),
     components.length > 20 ? `- *+${components.length - 20} additional components in \`BOUND_DS.json\`.*` : '',
     cards.length ? `\nSpecimen cards: ${cards.map(plainAsciiPunctuation).join(', ')}.` : '',
     '',

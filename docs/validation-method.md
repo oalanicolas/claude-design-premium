@@ -67,9 +67,9 @@ In a Claude Design project with the host DS present, send `GO` in a new tab.
 
 1. Claude executes `context-signals` logic and reports `SCRIPTS APPLIED`.
 2. Pipeline runs per [`script-pipeline.md`](script-pipeline.md): detect-bound-ds -> extract-ds-voice
-   -> bootstrap-harness -> personalize-dc.
-3. `BOUND_DS.json`, `styles.css`, `DESIGN.md` written; root `*.dc.html` personalized (no `{{BOUND_DS_`
-   placeholders left).
+   -> bootstrap-harness -> personalize-dc (seam).
+3. `BOUND_DS.json`, `styles.css`, `DESIGN.md` written; design-system DC materialized (no `{{INTRO_`
+   or `{{DS_HELMET_BLOCK}}` placeholders left).
 4. Response includes `HARNESS AUTO-SETUP` and asks for the first surface.
 
 **Fail:** Claude tells the user to run shell commands in the canvas, or skips scripts entirely.

@@ -209,7 +209,6 @@ function buildBindingFromDsRoot(root, dsRoot, manifest, bundleText, extra = {}) 
     readme: readmePath,
     iconLibrary: detectIconLibrary(manifest, bundleText),
     chromeSelectors: detectChromeSelectors(bundleText),
-    cards: (manifest.cards ?? []).map((c) => c.name ?? c.path ?? String(c)),
     cardMeta: (manifest.cards ?? []).map((c) =>
       typeof c === 'string'
         ? { name: c }
@@ -231,10 +230,9 @@ function buildBindingFromDsRoot(root, dsRoot, manifest, bundleText, extra = {}) 
       subtitle: s.subtitle ?? null,
       viewport: s.viewport ?? null,
     })),
-    tokens: manifest.tokens ?? [],
+    tokenCount: (manifest.tokens ?? []).length,
     themes: manifest.themes ?? [],
     brandFonts: manifest.brandFonts ?? [],
-    templates: (manifest.templates ?? []).map((t) => t.name ?? String(t)),
     selectedBundle: posix(dsRoot),
     ...extra,
   };
@@ -397,10 +395,6 @@ export function detectHostDs(cwd = process.cwd(), options = {}) {
   };
 }
 
-/** @deprecated alias — use detectHostDs */
-export function detectBoundDs(cwd = process.cwd(), options = {}) {
-  return detectHostDs(cwd, options);
-}
 
 import { pathToFileURL } from 'node:url';
 

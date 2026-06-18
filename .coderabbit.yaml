@@ -1,0 +1,91 @@
+# CodeRabbit Configuration — Claude Design Premium (harness)
+# Docs: https://docs.coderabbit.ai/guides/configuration
+#
+# This is a harness for Claude Design Web (runs inside the canvas — no npm,
+# build, lint, or test toolchain). Review rules reflect the harness contract,
+# not a typical Node app. See CLAUDE.md + docs/canvas-runtime.md.
+
+language: pt-BR
+
+reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: true
+  poem: false
+  collapse_walkthrough: false
+  sequence_diagrams: false
+  auto_title_placeholder: "[CodeRabbit]"
+
+  path_instructions:
+    - path: "_ds/**"
+      instructions: |
+        BLOCK: the harness ships WITHOUT a design system. _ds/ is provided by
+        the host project and is gitignored (see .gitignore + README "The harness
+        does NOT ship _ds/"). If _ds/ appears in a diff, flag it — it must never
+        be committed to the harness repo.
+
+    - path: "scripts/**/*.mjs"
+      instructions: |
+        Deterministic harness scripts. NON-NEGOTIABLE: dependency-free —
+        node:fs / node:path built-ins ONLY. No npm packages, no import of bare
+        specifiers, no require() of third-party modules. Flag any new dependency.
+        Per script-security: bulk/mutating scripts must offer --dry-run, confirm,
+        and snapshot rollback (see file-snapshot.mjs), with distinct exit codes
+        (0 ok / 1 fail-rolled-back / 2 no-op / 3 arg-env error).
+
+    - path: "*.dc.html"
+      instructions: |
+        Design Components rendered inside Claude Design Web's canvas.
+        Canvas-safety: NO ESM imports, NO bundler-dependent modules, NO build
+        step, NO npm. Only static HTML/CSS, CSS custom properties, vanilla JS,
+        and self-contained UMD/IIFE globals via <script src>. React only via the
+        UMD + Babel + window-globals escape hatch. Every color/spacing/type/radius/
+        motion value must be a var(--*) token from the bound DS — never invent
+        hexes or hard-code values the tokens already define.
+
+    - path: "**/*.md"
+      instructions: |
+        Anti-AI-slop (same contract detect-text-antipatterns.mjs enforces):
+        flag em-dash (—) and double-hyphen (--) in prose — use comma, colon, or
+        period instead. Flag the "não é X, é Y" reframe used more than once per
+        doc, filler verbs (alavancar, destravar, potencializar, leverage, unlock,
+        empower), fake names/companies, and lorem ipsum. PT-BR docs must keep
+        correct accentuation.
+
+    - path: "skills/**/*.skill.md"
+      instructions: |
+        Document-backed procedures (not executable Skills — Claude Design Web has
+        a fixed native Skill set). Check that procedures stay canvas-safe (no shell
+        assumptions) and that audit skills require the detect-* scripts BEFORE
+        judgment. Apply the same anti-AI-slop rules as other markdown.
+
+    - path: ".github/**"
+      instructions: |
+        CI/CD files. Validate YAML syntax, workflow triggers, and permissions.
+        The CI must stay dependency-free (node --check + Node-builtin scripts);
+        do not introduce npm install / build / test steps the harness does not have.
+
+chat:
+  auto_reply: true
+
+knowledge_base:
+  learnings:
+    scope: auto
+
+tools:
+  gitleaks:
+    enabled: true
+  trufflehog:
+    enabled: true
+  dotenv-linter:
+    enabled: true
+  shellcheck:
+    enabled: false
+  yamllint:
+    enabled: true
+  markdownlint:
+    enabled: true
+  eslint:
+    enabled: false
+  biome:
+    enabled: false

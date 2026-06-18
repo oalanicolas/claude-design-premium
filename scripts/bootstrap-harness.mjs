@@ -126,6 +126,20 @@ function writeGeneratedStyles(binding) {
     lines.push(`@import "${importPath(binding, cssPath)}";`);
   }
 
+  lines.push(
+    '',
+    '@media (prefers-reduced-motion: reduce) {',
+    '  *,',
+    '  *::before,',
+    '  *::after {',
+    '    animation-duration: 0.001ms !important;',
+    '    animation-iteration-count: 1 !important;',
+    '    scroll-behavior: auto !important;',
+    '    transition-duration: 0.001ms !important;',
+    '  }',
+    '}',
+  );
+
   fs.writeFileSync(path.join(root, 'styles.css'), `${lines.join('\n')}\n`);
 }
 

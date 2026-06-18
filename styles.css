@@ -11,3 +11,14 @@
    Until then, Claude reads manifest globalCssPaths at runtime.
    Do NOT add token values here - edit them in the bound DS.
    ============================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}

@@ -11,9 +11,9 @@ agents. Do not rely on deterministic JS to write the final page.
 
 ## Goal
 
-Produce one deeply customized, editorial `.dc.html` page that turns a real design system,
-brand, person, or product corpus into a living verbal/visual identity showcase. The page should
-feel as worked and intentional as the FIVU reference: a strong hero, narrative progression,
+Produce one deeply customized, editorial `.dc.html` page that turns a real design system or
+identity corpus into a living verbal/visual identity showcase. The page should feel as worked
+and intentional as the FIVU reference: a strong hero, narrative progression,
 clear doctrine, concrete specimens, and validation rituals. It must still obey Claude Design
 Premium: bound DS tokens, bound DS components, `x-import`, canvas-safe HTML/CSS, and no
 invented design values.
@@ -28,8 +28,8 @@ Read every relevant source before composing:
 4. `.cdp/showcase-brief.json` when assembling `design-system.dc.html`.
 5. Current target `.dc.html`; preserve its `<helmet>`, `#harness`, and `<!-- CDP:INTRO-SCRIPT -->`
    when editing the design-system intro page.
-6. Any user-supplied corpus, FIVU spec, prompt, brand document, website capture, README, or
-   reference page. If a FIVU-style reference page is supplied, use it as quality and section-depth
+6. Any user-supplied corpus, FIVU spec, prompt, brand document, website capture, README material,
+   or reference page. If a FIVU-style reference page is supplied, use it as quality and section-depth
    reference, not as content to copy.
 
 If `BOUND_DS.json` or target page does not exist yet, do not invent them. Finish the skill/routing
@@ -50,7 +50,7 @@ The showcase must expose both:
 
 - **Constância:** the elements that must survive across every surface.
 - **Adaptação:** how the same voice changes across product UI, docs, sales, education, community,
-  onboarding, and AI prompts.
+  onboarding flows, plus AI prompts.
 
 ## One-Skill Synthesis Model
 
@@ -74,7 +74,7 @@ Extract or infer only from evidence:
 - Productive tensions: `pole A + mas + pole B`.
 - Fundamental beliefs: 5-7 hard truths and their implication for communication.
 - Conceptual enemies and allies: ideas, not people.
-- Reasoning pattern: inductive, deductive, analogical, narrative, dialectical, or mixed.
+- Reasoning pattern: inductive, deductive, analogical, narrative, dialectical, including mixed modes.
 - Argument sequence: problem, story, proof, reframe, action, etc.
 - Signature terms, power words, functional words, connectors, intensifiers, fillers.
 - Anti-vocabulary: jargon, clichés, market terms, generic phrases the voice must reject.

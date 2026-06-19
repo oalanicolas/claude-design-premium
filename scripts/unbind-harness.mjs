@@ -13,7 +13,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { FileSnapshot } from './file-snapshot.mjs';
+import { FileSnapshot, readJson } from './file-snapshot.mjs';
 import { removeLegacyDcFiles } from './intro-dc.mjs';
 
 const root = process.cwd();
@@ -70,7 +70,7 @@ function loadBinding() {
   const abs = path.join(root, 'BOUND_DS.json');
   if (!fs.existsSync(abs)) return null;
   try {
-    return JSON.parse(fs.readFileSync(abs, 'utf8'));
+    return readJson(root, 'BOUND_DS.json');
   } catch {
     return null;
   }

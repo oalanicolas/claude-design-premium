@@ -12,6 +12,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { writeShowcaseBrief, showcaseNeedsAssembly } from './showcase-brief.mjs';
+import { safeRead, readJson } from './file-snapshot.mjs';
 
 export const INTRO_TEMPLATE = 'scripts/templates/intro.dc.html';
 
@@ -43,13 +44,6 @@ export function listKnownIntroFiles() {
   ])];
 }
 
-function read(cwd, rel) {
-  try {
-    return fs.readFileSync(path.join(cwd, rel), 'utf8');
-  } catch {
-    return '';
-  }
-}
 
 function scoreLanguage(text, lang) {
   if (!text) return 0;
@@ -78,12 +72,12 @@ function scoreLanguage(text, lang) {
  */
 export function detectDocLanguage(cwd = process.cwd(), opts = {}) {
   const corpus = [
-    read(cwd, 'CLAUDE.md'),
-    read(cwd, 'README.md'),
-    read(cwd, 'README.pt-BR.md'),
-    read(cwd, 'DESIGN.md'),
-    opts.readmePath ? read(cwd, opts.readmePath) : '',
-    read(cwd, 'skills/harness-auto-setup.skill.md'),
+    safeRead(cwd, 'CLAUDE.md'),
+    safeRead(cwd, 'README.md'),
+    safeRead(cwd, 'README.pt-BR.md'),
+    safeRead(cwd, 'DESIGN.md'),
+    opts.readmePath ? safeRead(cwd, opts.readmePath) : '',
+    safeRead(cwd, 'skills/harness-auto-setup.skill.md'),
   ].join('\n');
 
   const pt = scoreLanguage(corpus, 'pt-BR');
@@ -212,7 +206,7 @@ function renderShowcaseScaffold(language, binding, voice) {
 
 function loadManifest(cwd, binding) {
   try {
-    return JSON.parse(read(cwd, binding.manifest));
+    return readJson(cwd, binding.manifest);
   } catch {
     return null;
   }
@@ -621,7 +615,7 @@ export function introNeedsMaterialize(cwd = process.cwd(), cachedBinding = null,
   if (!rootIntros.length) return true;
   if (!rootIntros.includes(expected)) return true;
   if (LEGACY_DC_FILES.some((f) => fs.existsSync(path.join(cwd, f)))) return true;
-  const content = read(cwd, expected);
+  const content = safeRead(cwd, expected);
   if (content.includes('{{DS_HELMET_BLOCK}}') || content.includes('{{BOUND_DS_')) return true;
   if (content.includes('{{INTRO_')) return true;
   if (content.includes('{{SHOWCASE_')) return true;

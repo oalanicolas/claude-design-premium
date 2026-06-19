@@ -6,6 +6,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { readJson } from './file-snapshot.mjs';
 
 const MIN_BINDING_VERSION = 2;
 
@@ -13,7 +14,7 @@ export function loadCachedBinding(root = process.cwd()) {
   const abs = path.join(root, 'BOUND_DS.json');
   if (!fs.existsSync(abs)) return null;
   try {
-    return JSON.parse(fs.readFileSync(abs, 'utf8'));
+    return readJson(root, 'BOUND_DS.json');
   } catch {
     return null;
   }

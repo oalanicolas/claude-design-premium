@@ -50,6 +50,12 @@ jobs:
             node --check "$f"
           done
 
+      # GATE: unit tests for the shared I/O kernel (node:test, built-ins only).
+      # Explicit *.test.mjs pattern so the integration fixture below stays a
+      # separate, dedicated step.
+      - name: Kernel unit tests (gate)
+        run: node --test scripts/*.test.mjs
+
       # GATE: builder-mode bootstrap using committed fixtures/builder-ds/
       - name: Builder bootstrap fixture (gate)
         run: node scripts/test-builder-bootstrap.mjs

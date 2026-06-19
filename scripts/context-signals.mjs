@@ -9,6 +9,7 @@ import {
 } from './binding-drift.mjs';
 import { listKnownIntroFiles } from './intro-dc.mjs';
 import { showcaseNeedsAssembly } from './showcase-brief.mjs';
+import { safeRead } from './file-snapshot.mjs';
 
 const root = process.cwd();
 
@@ -16,13 +17,7 @@ function exists(rel) {
   return fs.existsSync(path.join(root, rel));
 }
 
-function read(rel) {
-  try {
-    return fs.readFileSync(path.join(root, rel), 'utf8');
-  } catch {
-    return '';
-  }
-}
+const read = (rel) => safeRead(root, rel);
 
 const SKIP_DIRS = new Set(['node_modules', '.git', '_archive', 'scripts/templates']);
 

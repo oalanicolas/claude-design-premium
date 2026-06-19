@@ -10,6 +10,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import os from 'node:os';
+import { readJson } from './file-snapshot.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const harnessRoot = path.resolve(__dirname, '..');
@@ -53,7 +54,7 @@ function main() {
       throw new Error(`bootstrap exited ${run.status}`);
     }
 
-    const bound = JSON.parse(fs.readFileSync(path.join(tmp, 'BOUND_DS.json'), 'utf8'));
+    const bound = readJson(tmp, 'BOUND_DS.json');
     if (bound.hostMode !== 'builder') {
       throw new Error(`expected hostMode builder, got ${bound.hostMode}`);
     }

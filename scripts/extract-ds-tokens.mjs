@@ -4,17 +4,8 @@
  *
  * Samples token CSS from the bound DS for DESIGN.md synthesis and voice fallbacks.
  */
-import fs from 'node:fs';
-import path from 'node:path';
 import { importPath } from './ds-paths.mjs';
-
-function read(cwd, rel) {
-  try {
-    return fs.readFileSync(path.join(cwd, rel), 'utf8');
-  } catch {
-    return '';
-  }
-}
+import { safeRead } from './file-snapshot.mjs';
 
 function uniqueSorted(items) {
   return [...new Set(items)].sort();
@@ -46,7 +37,7 @@ export function extractDsTokens(binding, cwd = process.cwd()) {
   let found = 0;
 
   for (const rel of paths) {
-    const content = read(cwd, importPath(binding, rel));
+    const content = safeRead(cwd, importPath(binding, rel));
     if (content) found += 1;
     corpus += `${content}\n`;
   }

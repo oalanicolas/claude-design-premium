@@ -7,21 +7,14 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { safeRead, readJson } from './file-snapshot.mjs';
 
 const BRIEF_PATH = '.cdp/showcase-brief.json';
 const CONTRACT_VERSION = 1;
 
-function read(cwd, rel) {
-  try {
-    return fs.readFileSync(path.join(cwd, rel), 'utf8');
-  } catch {
-    return '';
-  }
-}
-
 function loadManifest(cwd, binding) {
   try {
-    return JSON.parse(read(cwd, binding.manifest));
+    return readJson(cwd, binding.manifest);
   } catch {
     return null;
   }
@@ -152,7 +145,7 @@ export function showcaseNeedsAssembly(cwd = process.cwd(), binding = null) {
   const introRel = binding?.introDc ?? 'design-system.dc.html';
   const introPath = path.join(cwd, introRel);
   if (!fs.existsSync(introPath)) return true;
-  const html = read(cwd, introRel);
+  const html = safeRead(cwd, introRel);
   if (html.includes('<!-- CDP:SHOWCASE:PENDING -->')) return true;
   if (!html.includes('data-cdp-showcase="assembled"')) return true;
   if (binding?.showcaseAssembled !== true) {

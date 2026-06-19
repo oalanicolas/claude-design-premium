@@ -9,14 +9,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { extractDsTokens } from './extract-ds-tokens.mjs';
-
-function read(cwd, rel) {
-  try {
-    return fs.readFileSync(path.join(cwd, rel), 'utf8');
-  } catch {
-    return '';
-  }
-}
+import { safeRead, readJson } from './file-snapshot.mjs';
 
 function extractBullets(readmeText, heading) {
   const re = new RegExp(`##\\s+${heading}[\\s\\S]*?(?=\\n##\\s|$)`, 'i');
@@ -86,7 +79,7 @@ export function synthesizeDesignMd(binding, voice, cwd = process.cwd(), tokenSum
   }
 
   const tokens = tokenSummary ?? extractDsTokens(binding, cwd);
-  const readmeText = binding.readme ? read(cwd, binding.readme) : '';
+  const readmeText = binding.readme ? safeRead(cwd, binding.readme) : '';
   const name = binding.name;
   const ns = binding.namespace;
   const components = binding.components ?? [];
@@ -263,7 +256,7 @@ if (isMain) {
     process.stderr.write('BOUND_DS.json missing - run bootstrap-harness.mjs first.\n');
     process.exit(3);
   }
-  const binding = JSON.parse(fs.readFileSync(bindingPath, 'utf8'));
+  const binding = readJson(process.cwd(), 'BOUND_DS.json');
   const voice = binding.voice ?? {};
   writeDesignMd(binding, voice);
   process.stdout.write(`Wrote DESIGN.md for ${binding.name}\n`);

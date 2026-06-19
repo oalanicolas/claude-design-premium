@@ -9,14 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { applyTokenHintsToVoice, extractDsTokens } from './extract-ds-tokens.mjs';
 import { detectDocLanguage } from './intro-dc.mjs';
-
-function read(root, rel) {
-  try {
-    return fs.readFileSync(path.join(root, rel), 'utf8');
-  } catch {
-    return '';
-  }
-}
+import { safeRead } from './file-snapshot.mjs';
 
 function firstMatch(text, patterns) {
   for (const re of patterns) {
@@ -87,7 +80,7 @@ function applyDefaults(voice, binding) {
 }
 
 export function extractDsVoice(binding, cwd = process.cwd()) {
-  const readmeText = binding.readme ? read(cwd, binding.readme) : '';
+  const readmeText = binding.readme ? safeRead(cwd, binding.readme) : '';
   const readmeHadTheme = /light.*default|dark.*default|dark mode is the default/i.test(readmeText);
 
   const voice = {

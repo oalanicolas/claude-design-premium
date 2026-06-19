@@ -65,3 +65,17 @@ node scripts/detect-text-antipatterns.mjs CLAUDE.md DESIGN.md skills *.dc.html
 ```
 
 Use local `node` for CI or maintainer preflight  -  not because the canvas cannot use the scripts.
+
+## Shared modules (I/O kernel)
+
+`file-snapshot.mjs` is the single source of truth for filesystem reads. Every
+pipeline script imports from it instead of redefining its own helpers:
+
+- `safeRead(root, rel)`  -  read a file, return `''` when missing.
+- `readJson(root, rel)`  -  read + parse JSON, throw with file context on failure.
+- `isPathInsideRoot(root, target)`  -  path containment guard for write targets.
+- `FileSnapshot`  -  capture/restore for mutating scripts (rollback on error).
+
+Path resolution for builder vs consumer host modes lives in `ds-paths.mjs`
+(`assetHref`, `bundleHref`, `importPath`). When you need to read a file in a new
+script, import from the kernel  -  do not re-implement a local `read()`.

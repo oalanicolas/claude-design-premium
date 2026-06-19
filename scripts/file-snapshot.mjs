@@ -68,6 +68,20 @@ export function safeRead(root, rel) {
 }
 
 /**
+ * Read + parse a JSON file relative to root. Throws with file context on
+ * malformed/missing JSON so callers get an actionable error.
+ * @param {string} root
+ * @param {string} rel
+ */
+export function readJson(root, rel) {
+  try {
+    return JSON.parse(fs.readFileSync(path.join(root, rel), 'utf8'));
+  } catch (err) {
+    throw new Error(`Failed to parse ${rel}: ${err.message}`);
+  }
+}
+
+/**
  * @param {string} root
  * @param {string} target
  */

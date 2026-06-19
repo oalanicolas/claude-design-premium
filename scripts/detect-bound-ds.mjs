@@ -8,7 +8,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { safeRead } from './file-snapshot.mjs';
+import { safeRead, readJson } from './file-snapshot.mjs';
 
 const DS_DIR = '_ds';
 const MANIFEST = '_ds_manifest.json';
@@ -18,18 +18,6 @@ const DEFAULT_CHROME_SELECTORS = ['.es-nav', '.fx-rail', '.as-overlay'];
 
 function exists(root, rel) {
   return fs.existsSync(path.join(root, rel));
-}
-
-function read(root, rel) {
-  return safeRead(root, rel);
-}
-
-function readJson(root, rel) {
-  try {
-    return JSON.parse(read(root, rel));
-  } catch (err) {
-    throw new Error(`Failed to parse ${rel}: ${err.message}`);
-  }
 }
 
 function posix(rel) {
@@ -127,7 +115,7 @@ function tokenDirFromPaths(globalCssPaths = []) {
 function loadExistingBinding(root) {
   if (!exists(root, 'BOUND_DS.json')) return null;
   try {
-    return JSON.parse(read(root, 'BOUND_DS.json'));
+    return readJson(root, 'BOUND_DS.json');
   } catch {
     return null;
   }
@@ -179,7 +167,7 @@ function buildBindingFromDsRoot(root, dsRoot, manifest, bundleText, extra = {}) 
   const manifestPath = dsRoot === '.' ? MANIFEST : path.join(dsRoot, MANIFEST);
   const bundlePath = dsRoot === '.' ? BUNDLE : path.join(dsRoot, BUNDLE);
   const readmePath = findReadme(root, dsRoot);
-  const readmeText = readmePath ? read(root, readmePath) : '';
+  const readmeText = readmePath ? safeRead(root, readmePath) : '';
   const globalCssPaths = manifest.globalCssPaths ?? [];
   const components = (manifest.components ?? []).map((c) => c.name);
   const componentMeta = (manifest.components ?? []).map((c) => ({
@@ -247,7 +235,7 @@ function detectBuilderHost(root, existingBinding) {
   } catch (err) {
     return { ok: false, error: err.message, hostMode: 'builder', candidates: [] };
   }
-  const bundleText = read(root, BUNDLE);
+  const bundleText = safeRead(root, BUNDLE);
 
   if (!manifest?.namespace) {
     return {
@@ -318,7 +306,7 @@ function detectConsumerHost(root, options = {}) {
   } catch (err) {
     return { ok: false, error: err.message, hostMode: 'consumer', candidates };
   }
-  const bundleText = read(root, path.join(dsRoot, BUNDLE));
+  const bundleText = safeRead(root, path.join(dsRoot, BUNDLE));
 
   if (!manifest?.namespace) {
     return {

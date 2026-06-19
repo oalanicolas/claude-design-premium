@@ -79,3 +79,8 @@ pipeline script imports from it instead of redefining its own helpers:
 Path resolution for builder vs consumer host modes lives in `ds-paths.mjs`
 (`assetHref`, `bundleHref`, `importPath`). When you need to read a file in a new
 script, import from the kernel  -  do not re-implement a local `read()`.
+
+Both kernel modules have dependency-free `node:test` suites
+(`scripts/*.test.mjs`), run in CI via `node --test scripts/*.test.mjs`. The
+builder bootstrap integration gate stays its own step
+(`node scripts/test-builder-bootstrap.mjs`).
